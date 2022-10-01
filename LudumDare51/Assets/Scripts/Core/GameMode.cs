@@ -1,23 +1,24 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 
 public class GameMode : MonoBehaviour
 {
     [SerializeField]
     Transform mapContainer;
+    [SerializeField]
+    UIController uiController;
 
-    // Start is called before the first frame update
+
+    
     void Start()
     {
-        StartNextBattle();
-        
-    }
+        Assert.IsNotNull(mapContainer);
+        Assert.IsNotNull(uiController);
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        StartNextBattle();
+        uiController.Announce("Game begins!");
     }
 
     void StartNextBattle()
@@ -44,7 +45,7 @@ public class GameMode : MonoBehaviour
         {
             var map = mapContainer.GetChild(0);
             map.gameObject.SetActive(false);
-            Destroy(map);
+            Destroy(map.gameObject);
         }
     }
 }
