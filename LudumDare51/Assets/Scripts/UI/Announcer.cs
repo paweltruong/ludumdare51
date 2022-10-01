@@ -28,15 +28,17 @@ public class Announcer : CanvasGroupMonobehaviour
 
     public void Announce(string text, float duration)
     {
+        Debug.Log("Announcing!");
         txtAnnouncer.text = text;
         FadeIn();
         StartDurationCountdown(duration);
+        Singleton.Instance.AudioManager.PlaySFX_Announcement();
     }
 
     void StartDurationCountdown( float duration)
     {
         requestedDuration = duration;
-        durationCountdown = fadeSpeed + duration;
+        durationCountdown = 1 / speedDivider + duration;
     }
 
     void TickDuration(float deltaTime)
@@ -52,10 +54,12 @@ public class Announcer : CanvasGroupMonobehaviour
                 OnDurationExpired();
             }
         }
+        Debug.LogFormat("Announcing alpha {0}", masterCanvasGroup.alpha.ToString("0.000000"));
     }
 
     void OnDurationExpired()
     {
+        Debug.Log("OnDurationExpired!");
         durationCountdown = 0;
         FadeOut();
     }
