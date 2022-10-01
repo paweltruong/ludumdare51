@@ -21,7 +21,8 @@ MonoBehaviour:
   baseRange: 3
   baseHp: 3
   baseArmor: 1
-  baseDamage: 1
+  baseMinDamage: 0
+  baseMaxDamage: 1
   baseAttackSpeed: 1.8
   baseDodge: 0.1
   baseDodgeCooldown: 2

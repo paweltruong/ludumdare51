@@ -11,6 +11,14 @@ public class CanvasGroupMonobehaviour : MonoBehaviour
     protected float desiredAlpha = 0;
     protected float currentAlpha = 0;
 
+    public virtual void Awake()
+    {
+        if (masterCanvasGroup != null)
+        {
+            desiredAlpha = masterCanvasGroup.alpha;
+        }
+    }
+
     public virtual void Start()
     {
         speedDivider = 1 / Singleton.Instance.GameInstance.GetConfiguration().FadeSpeed;

@@ -12,15 +12,27 @@ public class UnitBlueprint : ScriptableObject, IUnitBlueprint
     public string description = string.Empty;
     [Tooltip("Upgrades to")]
     public UnitBlueprint upgrade;
-    public int cost;
+    [Range(0, 100)]
+    public int cost = 1;
+    [Range(0, 3)]
     public int level = 1;
+    [Range(0,10)]
     public float baseMoveSpeed = 0;
+    [Range(0, 10)]
     public float baseRange = 1;
+    [Range(0, 100)]
     public float baseHp = 1;
+    [Range(0, 10)]
     public float baseArmor = 0;
-    public float baseDamage = 0;
+    [Range(0, 100)]
+    public float baseMinDamage = 0;
+    [Range(0, 100)]
+    public float baseMaxDamage = 0;
+    [Range(0, 10)]
     public float baseAttackSpeed = 0;
+    [Range(0, 1)]
     public float baseDodge = 0;
+    [Range(0, 10)]
     public float baseDodgeCooldown = 0;
 
     #region IUnitBlueprint
@@ -32,7 +44,8 @@ public class UnitBlueprint : ScriptableObject, IUnitBlueprint
     IUnitBlueprint IUnitBlueprint.GetUpgradeBlueprint() { return upgrade; }
     public float GetBaseHp() { return baseHp; }
     public float GetBaseArmor() { return baseArmor; }
-    public float GetBaseDamage() { return baseDamage; }
+    public float GetBaseMinDamage() { return baseMinDamage; }
+    public float GetBaseMaxDamage() { return baseMaxDamage; }   
     public float GetBaseAttackSpeed() { return baseAttackSpeed; }
     public float GetBaseMoveSpeed() { return baseMoveSpeed; }
     public float GetBaseDodge() { return baseDodge; }

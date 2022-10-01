@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Assets.Scripts.Units
 {
-    internal interface IUnitBlueprint
+    public interface IUnitBlueprint
     {
         string GetName();
         string GetDesc();
@@ -15,7 +15,8 @@ namespace Assets.Scripts.Units
         IUnitBlueprint GetUpgradeBlueprint();
         float GetBaseHp();
         float GetBaseArmor();
-        float GetBaseDamage();
+        float GetBaseMinDamage();
+        float GetBaseMaxDamage();
         float GetBaseAttackSpeed();
         float GetBaseMoveSpeed();
         float GetBaseDodge();
