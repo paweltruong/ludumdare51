@@ -17,7 +17,7 @@ public class AudioManager : MonoBehaviour
         Assert.IsNotNull(musicSource);
         Assert.IsNotNull(sfxSource);
 
-        configuration = Singleton.Instance.GameInstance.GetConfiguration();
+        configuration = Singleton.Instance.GameInstance.Configuration;
         Assert.IsNotNull(configuration);
         Assert.IsNotNull(configuration.ClickSound);
         Assert.IsNotNull(configuration.AnnouncementSound);
@@ -30,10 +30,10 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySFX_Click()
     {        
-        PlaySFX(Singleton.Instance.GameInstance.GetConfiguration().ClickSound);
+        PlaySFX(Singleton.Instance.GameInstance.Configuration.ClickSound);
     }
     public void PlaySFX_Announcement()
     {
-        PlaySFX(Singleton.Instance.GameInstance.GetConfiguration().AnnouncementSound);
+        PlaySFX(Singleton.Instance.GameInstance.Configuration.AnnouncementSound);
     }
 }

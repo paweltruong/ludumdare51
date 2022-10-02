@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class CanvasGroupMonobehaviour : MonoBehaviour
@@ -21,7 +19,7 @@ public class CanvasGroupMonobehaviour : MonoBehaviour
 
     public virtual void Start()
     {
-        speedDivider = 1 / Singleton.Instance.GameInstance.GetConfiguration().FadeSpeed;
+        speedDivider = 1 / Singleton.Instance.GameInstance.Configuration.FadeSpeed;
     }
 
     public virtual void Update()
@@ -29,13 +27,30 @@ public class CanvasGroupMonobehaviour : MonoBehaviour
         if (masterCanvasGroup != null && masterCanvasGroup.alpha != desiredAlpha)
         {
 
-            Debug.LogFormat("CVMB upd alpha {0}", masterCanvasGroup.alpha.ToString("0.000000"));
+            //Debug.LogFormat("CVMB upd alpha {0}", masterCanvasGroup.alpha.ToString("0.000000"));
             masterCanvasGroup.alpha = Mathf.MoveTowards(masterCanvasGroup.alpha, desiredAlpha, speedDivider * Time.deltaTime);
         }
         else
         {
 
-            Debug.LogFormat("CVMB no upd alpha {0} des {1}", masterCanvasGroup.alpha.ToString("0.000000"), desiredAlpha.ToString("0.000000"));
+            //Debug.LogFormat("CVMB no upd alpha {0} des {1}", masterCanvasGroup.alpha.ToString("0.000000"), desiredAlpha.ToString("0.000000"));
+        }
+    }
+
+    public void ShowImmediate()
+    {
+        if (masterCanvasGroup != null)
+        {
+            desiredAlpha = 1;
+            masterCanvasGroup.alpha = 1;
+        }
+    }
+    public void HideImmediate()
+    {
+        if (masterCanvasGroup != null)
+        {
+            desiredAlpha = 0;
+            masterCanvasGroup.alpha = 0;
         }
     }
 

@@ -1,13 +1,16 @@
-using Assets.Scripts.Units;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Assertions;
 
 public class UnitInstance : MonoBehaviour, IUnitInstance
 {
+    [SerializeField]
+    bool disableAgentOnAwake = true;
+
+    NavMeshAgent agent;
     IUnitBlueprint blueprint;
     SpriteRenderer spriteRenderer;
+    EUnitOwner owner;
 
     float currentHp;
 
@@ -17,22 +20,37 @@ public class UnitInstance : MonoBehaviour, IUnitInstance
     private void Awake()
     {
         spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+        agent = GetComponentInChildren<NavMeshAgent>();
 
         Assert.IsNotNull(spriteRenderer);
+        Assert.IsNotNull(agent);
+        if (disableAgentOnAwake)
+        {
+            agent.enabled = false;
+        }
     }
 
-    public void Setup(IUnitBlueprint blueprint)
+    public void Setup(IUnitBlueprint blueprint, EUnitOwner owner)
     {
+        this.owner = owner;
         this.blueprint = blueprint;
         spriteRenderer.sprite = blueprint.GetSprite();
 
+        currentHp = blueprint.GetBaseHp();
+        currentExp = 0;
+        maxExp = blueprint.ToMaxExp();
+        agent.enabled = true;
     }
 
-    void Reset()
+    void ResetData()
     {
+        owner = EUnitOwner.None;
+        blueprint = null;
         currentHp = 0;
         currentExp = 0;
         maxExp = 0;
+
+        agent.enabled = false;
     }
 
     #region IUnitInstance
@@ -129,4 +147,18 @@ public class UnitInstance : MonoBehaviour, IUnitInstance
     }
     #endregion IUnitInstance
 
+    #region IPoolable
+    public bool CanBeTakenFromPool()
+    {
+        return !gameObject.activeInHierarchy
+            && blueprint == null
+            && owner == EUnitOwner.None;
+    }
+    public void CleanupForPooling()
+    {
+        gameObject.SetActive(false);
+
+        ResetData();
+    }
+    #endregion IPoolable
 }

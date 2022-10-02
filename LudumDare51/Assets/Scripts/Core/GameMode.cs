@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Assertions;
 
@@ -11,14 +9,35 @@ public class GameMode : MonoBehaviour
     UIController uiController;
 
 
-    
+
+
     void Start()
     {
         Assert.IsNotNull(mapContainer);
         Assert.IsNotNull(uiController);
 
-        StartNextBattle();
-        uiController.Announce("Game begins!");
+
+        Singleton.Instance.GameInstance.GameState.ResetState();
+
+        uiController.OnRecruitmentConfirmed += UiController_OnRecruitmentConfirmed;
+
+
+
+        Stage_Intro_01();
+
+        //StartNextBattle();
+        //uiController.Announce("Game begins!");
+    }
+
+    private void UiController_OnRecruitmentConfirmed(IUnitBlueprint unitBlueprint)
+    {
+        RecruitUnit(unitBlueprint);
+    }
+
+    void RecruitUnit(IUnitBlueprint unitBlueprint)
+    {
+        var newUnit = UnitsPool.Instance.GetNewUnitFromPool();
+        newUnit.Setup(unitBlueprint, EUnitOwner.Player1);
     }
 
     void StartNextBattle()
@@ -30,7 +49,7 @@ public class GameMode : MonoBehaviour
     {
         DeleteOldMap();
 
-        var configuration = Singleton.Instance.GameInstance.GetConfiguration();
+        var configuration = Singleton.Instance.GameInstance.Configuration;
         //TODO:do not repeat last X maps
         var randomMapIndex = Random.Range(0, configuration.Maps.Length);
         var mapPrefab = configuration.Maps[randomMapIndex];
@@ -47,5 +66,21 @@ public class GameMode : MonoBehaviour
             map.gameObject.SetActive(false);
             Destroy(map.gameObject);
         }
+    }
+
+    public void Stage_Intro_01()
+    {
+        uiController.UpdateCoinsUI();
+        uiController.UpdateRerollUI();
+        uiController.HideShopUI();
+        uiController.HidePlacementUI();
+        uiController.HidePawnSlots();
+
+        //RollRecruits();
+    }
+
+    void RollRecruits()
+    {
+
     }
 }

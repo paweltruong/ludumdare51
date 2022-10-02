@@ -1,8 +1,3 @@
-using Assets.Scripts.Units;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "UnitBlueprint", menuName = "ScriptableObjects/UnitBlueprint", order = 1)]
@@ -15,7 +10,7 @@ public class UnitBlueprint : ScriptableObject, IUnitBlueprint
     public Sprite sprite;
     [Range(0, 100)]
     public int cost = 1;
-    [Range(0, 3)]
+    [Range(1, 3)]
     public int level = 1;
     [Range(0, 10)]
     public float baseRange = 1;

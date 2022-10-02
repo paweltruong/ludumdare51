@@ -1,10 +1,4 @@
-﻿using Assets.Scripts.Units;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 
 public static class CommonExtensions
@@ -103,5 +97,22 @@ public static class CommonExtensions
     public static string ToNameAndLevelString(this IUnitBlueprint unitBP)
     {
         return String.Format("{0} lvl {1}", unitBP.GetName(), unitBP.GetLevel());
+    }
+
+    public static string ToShortLevelString(this IUnitBlueprint unitBP)
+    {
+        return String.Format("lvl {0}", unitBP.GetLevel());
+    }
+    public static float ToMaxExp(this IUnitBlueprint unitBP)
+    {
+        switch (unitBP.GetLevel())
+        {
+            case 1:
+                return 10;
+            case 2:
+                return 20;
+            default:
+                return 0;
+        }
     }
 }

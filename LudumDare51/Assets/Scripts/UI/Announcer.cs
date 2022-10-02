@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
@@ -28,7 +26,6 @@ public class Announcer : CanvasGroupMonobehaviour
 
     public void Announce(string text, float duration)
     {
-        Debug.Log("Announcing!");
         txtAnnouncer.text = text;
         FadeIn();
         StartDurationCountdown(duration);
@@ -54,12 +51,12 @@ public class Announcer : CanvasGroupMonobehaviour
                 OnDurationExpired();
             }
         }
-        Debug.LogFormat("Announcing alpha {0}", masterCanvasGroup.alpha.ToString("0.000000"));
+        //Debug.LogFormat("Announcing alpha {0}", masterCanvasGroup.alpha.ToString("0.000000"));
     }
 
     void OnDurationExpired()
     {
-        Debug.Log("OnDurationExpired!");
+        //Debug.Log("OnDurationExpired!");
         durationCountdown = 0;
         FadeOut();
     }
