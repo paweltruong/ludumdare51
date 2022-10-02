@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: GameConfiguration_DEV
   m_EditorClassIdentifier: 
   Maps:
-  - {fileID: 4501925897614480488, guid: 945112366caccfa4d9c19d1d4f2e142d, type: 3}
   - {fileID: 2047729791899604518, guid: 827a173febb7308458ddd471de2287a1, type: 3}
+  FadeSpeed: 2
   AnnouncementDuration: 3
   ClickSound: {fileID: 8300000, guid: 431f4bb678c145c458eabc170fece6b8, type: 3}
   AnnouncementSound: {fileID: 8300000, guid: 89fd07fc295248042b18ed78a39ad848, type: 3}

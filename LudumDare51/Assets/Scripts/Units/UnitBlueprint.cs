@@ -12,12 +12,11 @@ public class UnitBlueprint : ScriptableObject, IUnitBlueprint
     public string description = string.Empty;
     [Tooltip("Upgrades to")]
     public UnitBlueprint upgrade;
+    public Sprite sprite;
     [Range(0, 100)]
     public int cost = 1;
     [Range(0, 3)]
     public int level = 1;
-    [Range(0,10)]
-    public float baseMoveSpeed = 0;
     [Range(0, 10)]
     public float baseRange = 1;
     [Range(0, 100)]
@@ -34,6 +33,13 @@ public class UnitBlueprint : ScriptableObject, IUnitBlueprint
     public float baseDodge = 0;
     [Range(0, 10)]
     public float baseDodgeCooldown = 0;
+    [Header("Agent")]
+    [Range(0,10)]
+    public float baseMoveSpeed = 0;
+    public float angularSpeed = 120;
+    public float acceleration = 5;
+    public float obstacleAvoidanceRadius = .5f;
+    public float coliderRadius = .5f;
 
     #region IUnitBlueprint
 
@@ -51,6 +57,8 @@ public class UnitBlueprint : ScriptableObject, IUnitBlueprint
     public float GetBaseDodge() { return baseDodge; }
     public float GetBaseDodgeCooldown() { return baseDodgeCooldown; }
     public float GetBaseRange() { return baseRange; }
+
+    public Sprite GetSprite() { return sprite; }
 
     #endregion
 }

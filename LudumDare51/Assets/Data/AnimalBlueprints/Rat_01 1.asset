@@ -15,9 +15,9 @@ MonoBehaviour:
   unitName: Rat
   description: Rat can attack
   upgrade: {fileID: 0}
+  sprite: {fileID: 767066602, guid: 4a68e627eccdc7b41919a6f429115400, type: 3}
   cost: 1
   level: 1
-  baseMoveSpeed: 3
   baseRange: 3
   baseHp: 3
   baseArmor: 1
@@ -26,3 +26,8 @@ MonoBehaviour:
   baseAttackSpeed: 1.8
   baseDodge: 0.1
   baseDodgeCooldown: 2
+  baseMoveSpeed: 2
+  angularSpeed: 220
+  acceleration: 5
+  obstacleAvoidanceRadius: 0.15
+  coliderRadius: 0.14

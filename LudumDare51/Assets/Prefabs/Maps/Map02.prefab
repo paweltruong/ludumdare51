@@ -237,7 +237,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2773617166996165493, guid: d4ba5c3349c7ac445bae6bfb730746ba, type: 3}
       propertyPath: m_VoxelSize
-      value: 0.083333336
+      value: 0.033333335
       objectReference: {fileID: 0}
     - target: {fileID: 8361443518230335688, guid: d4ba5c3349c7ac445bae6bfb730746ba, type: 3}
       propertyPath: m_Name

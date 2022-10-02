@@ -24,7 +24,7 @@ public class UnitInstance : MonoBehaviour, IUnitInstance
     public void Setup(IUnitBlueprint blueprint)
     {
         this.blueprint = blueprint;
-
+        spriteRenderer.sprite = blueprint.GetSprite();
 
     }
 
@@ -121,6 +121,11 @@ public class UnitInstance : MonoBehaviour, IUnitInstance
     {
 
         return Random.Range(blueprint.GetBaseMinDamage(), blueprint.GetBaseMaxDamage());
+    }
+
+    public Sprite GetSprite()
+    {
+        return blueprint.GetSprite();
     }
     #endregion IUnitInstance
 

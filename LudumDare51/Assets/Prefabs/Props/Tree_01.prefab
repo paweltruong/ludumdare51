@@ -133,7 +133,7 @@ MonoBehaviour:
   m_OverrideArea: 1
   m_Area: 1
   m_IgnoreFromBuild: 0
-  m_AffectedAgents: ffffffff
+  m_AffectedAgents: 00000000f2652faea98c17ecf46d2d58c3c0608d
 --- !u!58 &9080751400827796613
 CircleCollider2D:
   m_ObjectHideFlags: 0

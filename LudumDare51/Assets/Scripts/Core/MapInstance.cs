@@ -7,20 +7,24 @@ using UnityEngine.Assertions;
 public class MapInstance : MonoBehaviour
 {
 
-    NavMeshSurface2d navMesh;
+    NavMeshSurface2d[] navMeshes;
 
 
 
     private void Awake()
     {
-        navMesh = GetComponentInChildren<NavMeshSurface2d>();
-        Assert.IsNotNull(navMesh, string.Format("Nav mesh not found within MapInstance {0}", name));
+        navMeshes = GetComponentsInChildren<NavMeshSurface2d>();
+        Assert.IsTrue(navMeshes.Length > 0, string.Format("Nav mesh not found within MapInstance {0}", name));
     }
 
     public void Bake()
     {
-        var operation = navMesh.BuildNavMeshAsync();
-        operation.completed += NavMesh_OnBuildNavMeshCompleted;
+        //Bake for all agent types
+        foreach (var navMesh in navMeshes)
+        {
+            var operation = navMesh.BuildNavMeshAsync();
+            operation.completed += NavMesh_OnBuildNavMeshCompleted;
+        }
     }
 
     void NavMesh_OnBuildNavMeshCompleted(AsyncOperation operation)

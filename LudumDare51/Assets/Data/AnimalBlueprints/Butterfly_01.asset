@@ -15,13 +15,19 @@ MonoBehaviour:
   unitName: Butterfly
   description: Flies gently
   upgrade: {fileID: 0}
+  sprite: {fileID: 1577683061, guid: 1b6af908423a2bf4f859ee27d0f08969, type: 3}
   cost: 1
   level: 1
-  baseMoveSpeed: 2
   baseRange: 5
   baseHp: 1
   baseArmor: 0
-  baseDamage: 0
+  baseMinDamage: 0
+  baseMaxDamage: 0
   baseAttackSpeed: 0
   baseDodge: 0.5
   baseDodgeCooldown: 1.5
+  baseMoveSpeed: 1
+  angularSpeed: 360
+  acceleration: 3
+  obstacleAvoidanceRadius: 0.17
+  coliderRadius: 0.14
