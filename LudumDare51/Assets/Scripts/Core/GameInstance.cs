@@ -10,8 +10,6 @@ public class GameInstance : MonoBehaviour
 
     public GameState GameState { get; private set; }
 
-    public UnityEvent<int> OnTotalCoinsChanged;
-
     public GameConfiguration Configuration { get { return configuration; } }
 
     private void Start()

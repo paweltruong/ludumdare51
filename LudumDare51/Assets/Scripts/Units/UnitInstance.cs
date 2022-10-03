@@ -100,6 +100,10 @@ public class UnitInstance : MonoBehaviour, IUnitInstance
         return blueprint.GetBaseRange();
     }
 
+    public EUnitTier GetTier()
+    {
+        return blueprint.GetTier();
+    }
     public int GetCost()
     {
         return blueprint.GetCost();

@@ -34,6 +34,7 @@ public class UIController : MonoBehaviour
 
 
     public event UnitBlueprintEventHandler OnRecruitmentConfirmed;
+    public event System.Action OnRecruitmentReroll;
 
 
     void Start()
@@ -53,6 +54,20 @@ public class UIController : MonoBehaviour
         {
             recruitmentSlot.OnRecruitmentConfirmed += RecruitmentSlot_OnRecruitmentConfirmed;
         }
+        btnReroll.onClick.AddListener(BtnReroll_OnClick);
+
+        Singleton.Instance.GameInstance.GameState.OnTotalCoinsChanged += GameState_OnTotalCoinsChanged;
+    }
+
+    private void GameState_OnTotalCoinsChanged(int coins)
+    {
+        UpdateCoinsUIInternal(coins);
+    }
+
+
+    void BtnReroll_OnClick()
+    {
+        OnRecruitmentReroll.Invoke();
     }
 
     private void RecruitmentSlot_OnRecruitmentConfirmed(IUnitBlueprint obj)
@@ -78,7 +93,13 @@ public class UIController : MonoBehaviour
 
     public void UpdateCoinsUI()
     {
-        coins.SetValue(Singleton.Instance.GameInstance.GameState.PlayerCoins);
+        UpdateCoinsUIInternal(Singleton.Instance.GameInstance.GameState.PlayerCoins);
+    }
+
+    void UpdateCoinsUIInternal(int coins)
+    {
+        this.coins.SetValue(coins);
+        UpdateRerollUI();
     }
 
     public void UpdateRerollUI()
@@ -89,7 +110,7 @@ public class UIController : MonoBehaviour
             Singleton.Instance.GameInstance.Configuration.SpriteAtlas_Coin
             );
 
-        btnReroll.gameObject.SetActive(rollCost >= 0);
+        btnReroll.gameObject.SetActive(rollCost >= 0 && Singleton.Instance.GameInstance.GameState.PlayerCoins >= rollCost);
     }
 
     public void ShowShopUI()

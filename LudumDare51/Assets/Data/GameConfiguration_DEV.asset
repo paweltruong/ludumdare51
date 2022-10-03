@@ -17,6 +17,27 @@ MonoBehaviour:
   InitialSlots: 3
   InitialCoins: 3
   RerollCostPerTrialIndex: 0100000002000000020000000200000002000000030000000300000003000000030000000400000004000000040000000400000005000000050000000500000005000000060000000600000006000000
+  RecruitsConfigPerTrialIndex:
+  - {fileID: 11400000, guid: abf692824b096b94dbca455b634d1e10, type: 2}
+  - {fileID: 11400000, guid: abf692824b096b94dbca455b634d1e10, type: 2}
+  - {fileID: 11400000, guid: abf692824b096b94dbca455b634d1e10, type: 2}
+  - {fileID: 11400000, guid: abf692824b096b94dbca455b634d1e10, type: 2}
+  - {fileID: 11400000, guid: abf692824b096b94dbca455b634d1e10, type: 2}
+  - {fileID: 11400000, guid: abf692824b096b94dbca455b634d1e10, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   FadeSpeed: 2
   AnnouncementDuration: 3
   SpriteAtlas_Coin: <sprite name="coin">

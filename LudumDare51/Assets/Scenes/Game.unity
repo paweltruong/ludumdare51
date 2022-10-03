@@ -6376,6 +6376,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RecruitSlot 1
       objectReference: {fileID: 0}
+    - target: {fileID: 9114357705260677340, guid: 62e7c369a77e13b429e5d6e81cf19113, type: 3}
+      propertyPath: slotIndex
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 62e7c369a77e13b429e5d6e81cf19113, type: 3}
 --- !u!224 &1462083754 stripped
@@ -7693,6 +7697,10 @@ PrefabInstance:
     - target: {fileID: 7581349625266371404, guid: 62e7c369a77e13b429e5d6e81cf19113, type: 3}
       propertyPath: m_Name
       value: RecruitSlot 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9114357705260677340, guid: 62e7c369a77e13b429e5d6e81cf19113, type: 3}
+      propertyPath: slotIndex
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 62e7c369a77e13b429e5d6e81cf19113, type: 3}
@@ -9626,6 +9634,10 @@ PrefabInstance:
     - target: {fileID: 7581349625266371404, guid: 62e7c369a77e13b429e5d6e81cf19113, type: 3}
       propertyPath: m_Name
       value: RecruitSlot 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9114357705260677340, guid: 62e7c369a77e13b429e5d6e81cf19113, type: 3}
+      propertyPath: slotIndex
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 62e7c369a77e13b429e5d6e81cf19113, type: 3}

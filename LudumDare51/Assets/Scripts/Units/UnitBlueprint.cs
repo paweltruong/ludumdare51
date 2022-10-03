@@ -8,6 +8,7 @@ public class UnitBlueprint : ScriptableObject, IUnitBlueprint
     [Tooltip("Upgrades to")]
     public UnitBlueprint upgrade;
     public Sprite sprite;
+    public EUnitTier tier = EUnitTier.Tier1;
     [Range(0, 100)]
     public int cost = 1;
     [Range(1, 3)]
@@ -40,6 +41,7 @@ public class UnitBlueprint : ScriptableObject, IUnitBlueprint
 
     public string GetName() { return unitName; }
     public string GetDesc() { return description; }
+    public EUnitTier GetTier() { return tier; }
     public int GetCost() { return cost; }
     public int GetLevel() { return level; }
     IUnitBlueprint IUnitBlueprint.GetUpgradeBlueprint() { return upgrade; }

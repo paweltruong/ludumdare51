@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameState
 {
@@ -9,11 +11,34 @@ public class GameState
     public int SlotsUnlocked = 0;
     public UnitInstance[] Slots = new UnitInstance[8];
     public List<UnitInstance> PlayerUnits;
+    public UnitBlueprint[] Recruits = new UnitBlueprint[3];
+
+
+    public event Action<int> OnTotalCoinsChanged;
+
+    public event Action<int> OnRecruitChanged;
 
     public void ResetState()
     {
         PlayerCoins = Singleton.Instance.GameInstance.Configuration.InitialCoins;
         SlotsUnlocked = Singleton.Instance.GameInstance.Configuration.InitialSlots;
+    }
+
+    public void SetRecruit(int index, UnitBlueprint unitBlueprint)
+    {
+        if (index >= Recruits.Length)
+        {
+            Debug.LogError("Invalid recruit index");
+            return;
+        }
+        Recruits[index] = unitBlueprint;
+        if(OnRecruitChanged != null) OnRecruitChanged.Invoke(index);
+    }
+
+    public void SubstractCoins(int amount)
+    {
+        PlayerCoins = Math.Clamp(PlayerCoins - amount, 0, 100000);
+        if (OnTotalCoinsChanged != null) OnTotalCoinsChanged.Invoke(PlayerCoins);
     }
 
     public int GetAvailableFreeSlotsCount()

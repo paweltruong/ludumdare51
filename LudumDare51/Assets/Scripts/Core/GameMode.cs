@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Events;
 
 public class GameMode : MonoBehaviour
 {
@@ -7,7 +8,6 @@ public class GameMode : MonoBehaviour
     Transform mapContainer;
     [SerializeField]
     UIController uiController;
-
 
 
 
@@ -20,6 +20,7 @@ public class GameMode : MonoBehaviour
         Singleton.Instance.GameInstance.GameState.ResetState();
 
         uiController.OnRecruitmentConfirmed += UiController_OnRecruitmentConfirmed;
+        uiController.OnRecruitmentReroll += UiController_OnRecruitmentReroll;
 
 
 
@@ -33,6 +34,12 @@ public class GameMode : MonoBehaviour
     {
         RecruitUnit(unitBlueprint);
     }
+    private void UiController_OnRecruitmentReroll()
+    {
+        Singleton.Instance.GameInstance.GameState.SubstractCoins(Singleton.Instance.GameInstance.GameState.GetCurrentRerollCost());
+        RollRecruits();
+    }
+
 
     void RecruitUnit(IUnitBlueprint unitBlueprint)
     {
@@ -76,11 +83,19 @@ public class GameMode : MonoBehaviour
         uiController.HidePlacementUI();
         uiController.HidePawnSlots();
 
-        //RollRecruits();
+        RollRecruits();
     }
 
     void RollRecruits()
     {
-
+        var currentTrialIndex = Singleton.Instance.GameInstance.GameState.CurrentTrialIndex;
+        var unitSetConfig = Singleton.Instance.GameInstance.Configuration.RecruitsConfigPerTrialIndex[currentTrialIndex];
+        
+        for (int i = 0; i < 3; ++i)
+        {
+            var unitBP = unitSetConfig.GetRandomUnit();
+            Singleton.Instance.GameInstance.GameState.SetRecruit(i, unitBP);
+        }
+        
     }
 }

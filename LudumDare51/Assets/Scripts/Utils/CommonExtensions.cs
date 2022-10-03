@@ -1,5 +1,5 @@
 ﻿using System;
-
+using UnityEngine;
 
 public static class CommonExtensions
 {
@@ -114,5 +114,12 @@ public static class CommonExtensions
             default:
                 return 0;
         }
+    }
+
+
+    public static bool IsRollSuccess(float chance)
+    {
+        var roll = UnityEngine.Random.Range(0.0f, 1f);
+        return roll <= chance;
     }
 }

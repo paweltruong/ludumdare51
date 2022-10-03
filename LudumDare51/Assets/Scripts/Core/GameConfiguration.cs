@@ -11,6 +11,7 @@ public class GameConfiguration : ScriptableObject
     /// Trial 0 is intro. Reroll cost -1 means reroll is disabled
     /// </summary>
     public int[] RerollCostPerTrialIndex = new int[20];
+    public UnitSpawnConfiguration[] RecruitsConfigPerTrialIndex = new UnitSpawnConfiguration[20];
 
     [Header("UI")]
     [Range(1,10)]

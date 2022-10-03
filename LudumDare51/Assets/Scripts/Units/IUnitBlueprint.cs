@@ -5,6 +5,7 @@ public interface IUnitBlueprint
 {
     string GetName();
     string GetDesc();
+    EUnitTier GetTier();
     int GetCost();
     int GetLevel();
     IUnitBlueprint GetUpgradeBlueprint();

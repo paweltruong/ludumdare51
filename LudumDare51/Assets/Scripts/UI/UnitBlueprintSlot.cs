@@ -28,6 +28,12 @@ public class UnitBlueprintSlot : CanvasGroupMonobehaviour
     {
         this.unitBlueprint = unitBp;
 
+        if (unitBlueprint == null)
+        {
+            ResetSlot();
+            return;
+        }
+
         txtName.text = unitBp.GetName();
         txtDesc.text = unitBp.ToShortLevelString();
     }

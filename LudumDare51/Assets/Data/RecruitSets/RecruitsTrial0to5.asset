@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a9282999c241d68468d4254841951e7a, type: 3}
+  m_Name: RecruitsTrial0to5
+  m_EditorClassIdentifier: 
+  Tier2Chance: 0
+  Tier3Chance: 0
+  UnitWeights:
+  - Unit: {fileID: 11400000, guid: dbb7127a8871d634a8f5f18a5524ab3a, type: 2}
+    Weight: 3
+  - Unit: {fileID: 11400000, guid: 34df1e94e3f4d334088d4f5e122a82d3, type: 2}
+    Weight: 5
+  - Unit: {fileID: 11400000, guid: 15e8e7bdf3446d44da656d9e174a79f2, type: 2}
+    Weight: 1

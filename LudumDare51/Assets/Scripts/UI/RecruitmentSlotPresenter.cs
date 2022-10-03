@@ -7,6 +7,8 @@ public class RecruitmentSlotPresenter : UnitBlueprintSlot
 {
     [SerializeField]
     TextMeshProUGUI txtCost;
+    [SerializeField]
+    int slotIndex = -1;
 
     [SerializeField]
     GameObject ButtonGO;
@@ -30,14 +32,30 @@ public class RecruitmentSlotPresenter : UnitBlueprintSlot
         Assert.IsNotNull(CostGO);
 
         //ResetSlot();
-        Singleton.Instance.GameInstance.OnTotalCoinsChanged.AddListener(GameInstance_OnTotalCoinsChanged);
+        Singleton.Instance.GameInstance.GameState.OnTotalCoinsChanged += GameState_OnTotalCoinsChanged;
+        Singleton.Instance.GameInstance.GameState.OnRecruitChanged += GameState_OnRecruitChanged;
+
+        UpdateFromGameState();
     }
 
+    private void GameState_OnRecruitChanged(int index)
+    {
+        if (slotIndex == index)
+        {
+            UpdateFromGameState();
+        }
+    }
 
-    void GameInstance_OnTotalCoinsChanged(int coins)
+    void UpdateFromGameState()
+    {
+        SetData(Singleton.Instance.GameInstance.GameState.Recruits[slotIndex]);
+    }
+
+    private void GameState_OnTotalCoinsChanged(int coins)
     {
         UpdateCostColor(coins);
     }
+
 
     public void Recruit()
     {
@@ -74,6 +92,7 @@ public class RecruitmentSlotPresenter : UnitBlueprintSlot
             SetStatus(ESlotStatus.Unavailable);
             return;
         }
+        SetStatus(ESlotStatus.Available);
 
         txtCost.text = String.Format("{0} {1}",unitBlueprint.GetCost(), Singleton.Instance.GameInstance.Configuration.SpriteAtlas_Coin);
         UpdateCostColor(Singleton.Instance.GameInstance.GameState.PlayerCoins);
