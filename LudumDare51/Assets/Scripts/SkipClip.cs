@@ -9,7 +9,7 @@ public class SkipClip : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.Escape))
+        if (Input.GetKeyUp(KeyCode.Space) || Input.GetKeyUp(KeyCode.Escape) || Input.GetMouseButtonUp(0))
         {
             OnSkipped.Invoke();
         }

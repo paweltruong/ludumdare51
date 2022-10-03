@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Assertions;
+using UnityEngine.UIElements;
 
 public class UnitInstance : MonoBehaviour, IUnitInstance
 {
@@ -16,6 +17,10 @@ public class UnitInstance : MonoBehaviour, IUnitInstance
 
     float currentExp;
     float maxExp;
+
+    bool isInLineup = false;
+    public bool IsInLineup { get { return isInLineup; } set { isInLineup = value; } }
+    Vector2 lineUpPosition;
 
     private void Awake()
     {
@@ -44,6 +49,9 @@ public class UnitInstance : MonoBehaviour, IUnitInstance
 
     void ResetData()
     {
+        isInLineup = false;
+        lineUpPosition = new Vector2(-1,-1);
+
         owner = EUnitOwner.None;
         blueprint = null;
         currentHp = 0;

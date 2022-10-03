@@ -9,6 +9,8 @@ public class CanvasGroupMonobehaviour : MonoBehaviour
     protected float desiredAlpha = 0;
     protected float currentAlpha = 0;
 
+    public float Alpha { get { return desiredAlpha; } }
+
     public virtual void Awake()
     {
         if (masterCanvasGroup != null)

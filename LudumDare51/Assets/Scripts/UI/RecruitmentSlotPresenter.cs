@@ -2,16 +2,15 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.UI;
 
 public class RecruitmentSlotPresenter : UnitBlueprintSlot
 {
     [SerializeField]
     TextMeshProUGUI txtCost;
-    [SerializeField]
-    int slotIndex = -1;
 
     [SerializeField]
-    GameObject ButtonGO;
+    Button button;
     [SerializeField]
     GameObject CostGO;
 
@@ -28,14 +27,17 @@ public class RecruitmentSlotPresenter : UnitBlueprintSlot
         base.Start();
 
         Assert.IsNotNull(txtCost);
-        Assert.IsNotNull(ButtonGO);
+        Assert.IsNotNull(button);
         Assert.IsNotNull(CostGO);
 
         //ResetSlot();
         Singleton.Instance.GameInstance.GameState.OnTotalCoinsChanged += GameState_OnTotalCoinsChanged;
         Singleton.Instance.GameInstance.GameState.OnRecruitChanged += GameState_OnRecruitChanged;
 
+        button.onClick.AddListener(Button_OnClick);
+
         UpdateFromGameState();
+
     }
 
     private void GameState_OnRecruitChanged(int index)
@@ -44,6 +46,11 @@ public class RecruitmentSlotPresenter : UnitBlueprintSlot
         {
             UpdateFromGameState();
         }
+    }
+
+    void Button_OnClick()
+    {
+        Recruit();
     }
 
     void UpdateFromGameState()
@@ -59,7 +66,7 @@ public class RecruitmentSlotPresenter : UnitBlueprintSlot
 
     public void Recruit()
     {
-        if(unitBlueprint == null) 
+        if (unitBlueprint == null) 
         {
             Debug.LogError("Unit BP is null");
             return;
@@ -100,6 +107,7 @@ public class RecruitmentSlotPresenter : UnitBlueprintSlot
 
     void UpdateCostColor(int availableCoins)
     {
+        if (unitBlueprint == null) return;
         txtCost.color = availableCoins >= unitBlueprint.GetCost() ? enoughCoinsColor : notEnoughCoinsColor;
     }
 
@@ -118,11 +126,11 @@ public class RecruitmentSlotPresenter : UnitBlueprintSlot
         switch (this.status)
         {
             case ESlotStatus.Available:
-                ButtonGO.SetActive(true);
+                button.gameObject.SetActive(true);
                 CostGO.SetActive(true);
                 break;
             default:
-                ButtonGO.SetActive(false);
+                button.gameObject.SetActive(false);
                 CostGO.SetActive(false);
                 break;
         }

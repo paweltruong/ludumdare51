@@ -299,7 +299,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -570,7 +570,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.80392164, g: 0.6627451, b: 0.40000004, a: 1}
+  m_Color: {r: 0.6981132, g: 0.5634524, b: 0.31283376, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -609,7 +609,7 @@ MonoBehaviour:
   m_Transition: 1
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
-    m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
+    m_HighlightedColor: {r: 0.582, g: 0.582, b: 0.582, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
@@ -715,7 +715,8 @@ MonoBehaviour:
   txtDesc: {fileID: 5656020443207982502}
   status: 0
   txtCost: {fileID: 4278645608474197753}
-  ButtonGO: {fileID: 5308368257002280336}
+  slotIndex: 0
+  button: {fileID: 8822915740974878855}
   CostGO: {fileID: 4591142659062231736}
   enoughCoinsColor: {r: 0.26666668, g: 0.21568629, b: 0.14901961, a: 1}
   notEnoughCoinsColor: {r: 0.8784314, g: 0.08627455, b: 0.0862745, a: 1}

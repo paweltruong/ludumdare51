@@ -9,6 +9,8 @@ public class UnitBlueprintSlot : CanvasGroupMonobehaviour
     [SerializeField]
     protected TextMeshProUGUI txtDesc;
     [SerializeField]
+    protected int slotIndex = -1;
+    [SerializeField]
     protected ESlotStatus status = ESlotStatus.None;
 
     protected IUnitBlueprint unitBlueprint;

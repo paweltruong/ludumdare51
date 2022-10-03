@@ -8,6 +8,8 @@ public class GameMode : MonoBehaviour
     Transform mapContainer;
     [SerializeField]
     UIController uiController;
+    [SerializeField]
+    TutorialController tutorialController;
 
 
 
@@ -15,19 +17,44 @@ public class GameMode : MonoBehaviour
     {
         Assert.IsNotNull(mapContainer);
         Assert.IsNotNull(uiController);
+        Assert.IsNotNull(tutorialController);
 
 
         Singleton.Instance.GameInstance.GameState.ResetState();
 
+        uiController.OnPawnSlotUnselected += UiController_OnPawnSlotUnselected;
+        uiController.OnPawnSlotSelected += UiController_OnPawnSlotSelected;
+        uiController.OnPawnRemoveFromLineupConfirmed += UiController_OnPawnRemoveFromLineupConfirmed;
         uiController.OnRecruitmentConfirmed += UiController_OnRecruitmentConfirmed;
         uiController.OnRecruitmentReroll += UiController_OnRecruitmentReroll;
+        uiController.OnSellSelected += UiController_OnSellSelected;
 
 
 
-        Stage_Intro_01();
+        Stage_Intro_00();
 
         //StartNextBattle();
         //uiController.Announce("Game begins!");
+    }
+
+    private void UiController_OnSellSelected()
+    {
+        Singleton.Instance.GameInstance.GameState.SellSelectedUnit();
+    }
+
+    private void UiController_OnPawnRemoveFromLineupConfirmed(UnitInstance lineupUnit, int targetSlotIndex)
+    {
+        throw new System.NotImplementedException();
+    }
+
+    private void UiController_OnPawnSlotSelected(UnitInstance unit, int targetSlotIndex)
+    {
+        Singleton.Instance.GameInstance.GameState.SelectUnit(unit);
+    }
+
+    private void UiController_OnPawnSlotUnselected(UnitInstance unit, int targetSlotIndex)
+    {
+        throw new System.NotImplementedException();
     }
 
     private void UiController_OnRecruitmentConfirmed(IUnitBlueprint unitBlueprint)
@@ -43,8 +70,15 @@ public class GameMode : MonoBehaviour
 
     void RecruitUnit(IUnitBlueprint unitBlueprint)
     {
+        //Create unit instance
         var newUnit = UnitsPool.Instance.GetNewUnitFromPool();
         newUnit.Setup(unitBlueprint, EUnitOwner.Player1);
+
+        //Add to slot
+        Singleton.Instance.GameInstance.GameState.AddToFreeSlot(newUnit);
+
+        //Substract cost
+        Singleton.Instance.GameInstance.GameState.SubstractCoins(unitBlueprint.GetCost());
     }
 
     void StartNextBattle()
@@ -75,27 +109,42 @@ public class GameMode : MonoBehaviour
         }
     }
 
-    public void Stage_Intro_01()
+    void Stage_Intro_00()
     {
+        Singleton.Instance.GameInstance.GameState.SetPhase(EGamePhase.Preparation);
         uiController.UpdateCoinsUI();
         uiController.UpdateRerollUI();
-        uiController.HideShopUI();
+        uiController.UpdateLineupCount();
         uiController.HidePlacementUI();
-        uiController.HidePawnSlots();
+
+        uiController.OnRecruitmentConfirmed += UiController_OnRecruitmentConfirmedInIntro;
 
         RollRecruits();
+        tutorialController.ShowStage(0);
+    }
+
+    private void UiController_OnRecruitmentConfirmedInIntro(IUnitBlueprint unitBlueprint)
+    {
+        uiController.OnRecruitmentConfirmed -= UiController_OnRecruitmentConfirmedInIntro;
+        Stage_Intro_01();
+    }
+
+    void Stage_Intro_01()
+    {
+        uiController.ShowPlacementUI();
+        tutorialController.ShowStage(1);
     }
 
     void RollRecruits()
     {
         var currentTrialIndex = Singleton.Instance.GameInstance.GameState.CurrentTrialIndex;
         var unitSetConfig = Singleton.Instance.GameInstance.Configuration.RecruitsConfigPerTrialIndex[currentTrialIndex];
-        
+
         for (int i = 0; i < 3; ++i)
         {
             var unitBP = unitSetConfig.GetRandomUnit();
             Singleton.Instance.GameInstance.GameState.SetRecruit(i, unitBP);
         }
-        
+
     }
 }

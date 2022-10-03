@@ -5,6 +5,7 @@ public class GameConfiguration : ScriptableObject
 {
     public MapInstance[] Maps;
     [Header("Game")]
+
     public int InitialSlots = 3;
     public int InitialCoins = 3;
     /// <summary>
@@ -12,6 +13,7 @@ public class GameConfiguration : ScriptableObject
     /// </summary>
     public int[] RerollCostPerTrialIndex = new int[20];
     public UnitSpawnConfiguration[] RecruitsConfigPerTrialIndex = new UnitSpawnConfiguration[20];
+    public int[] LineUpLimittPerTrialIndex = new int[20];
 
     [Header("UI")]
     [Range(1,10)]

@@ -782,11 +782,13 @@ MonoBehaviour:
   masterCanvasGroup: {fileID: 3678674912454149845}
   txtName: {fileID: 4968597370775258598}
   txtDesc: {fileID: 6654408221517369237}
+  slotIndex: -1
+  status: 0
   imgAvailable: {fileID: 9204850245264486072}
   imgUnavailable: {fileID: 4048033723023737187}
   imgSelected: {fileID: 265835961248960695}
   imgNone: {fileID: 4759972493154999783}
-  status: 0
+  button: {fileID: 8739751834513135814}
 --- !u!225 &3678674912454149845
 CanvasGroup:
   m_ObjectHideFlags: 0
