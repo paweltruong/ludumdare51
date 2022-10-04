@@ -19,12 +19,12 @@ public class GameState
     public List<UnitInstance> Lineup = new List<UnitInstance>();
 
 
-    public UnityEvent<int> OnTotalCoinsChanged;
-    public UnityEvent<int> OnRecruitChanged;
-    public UnityEvent<int> OnLineupLimitChanged;
-    public UnityEvent<int> OnSlotChanged;
-    public UnityEvent<EGamePhase> OnPhaseChanged;
-    public UnityEvent<UnitInstance> OnSelectedUnitChanged;
+    public UnityEvent<int> OnTotalCoinsChanged = new UnityEvent<int>();
+    public UnityEvent<int> OnRecruitChanged = new UnityEvent<int>();
+    public UnityEvent<int> OnLineupLimitChanged = new UnityEvent<int>();
+    public UnityEvent<int> OnSlotChanged = new UnityEvent<int>();
+    public UnityEvent<EGamePhase> OnPhaseChanged = new UnityEvent<EGamePhase>();
+    public UnityEvent<UnitInstance> OnSelectedUnitChanged = new UnityEvent<UnitInstance>();
 
     public void ChangeSlot(UnitInstance unit, int destinationSlotIndex)
     {

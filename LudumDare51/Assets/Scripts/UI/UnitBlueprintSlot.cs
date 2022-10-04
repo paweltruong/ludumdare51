@@ -36,8 +36,8 @@ public class UnitBlueprintSlot : CanvasGroupMonobehaviour
             return;
         }
 
-        txtName.text = unitBp.GetName();
-        txtDesc.text = unitBp.ToShortLevelString();
+        txtName.text = unitBlueprint.GetName();
+        txtDesc.text = unitBlueprint.ToShortLevelString();
     }
 
     protected virtual void ResetSlot()
