@@ -1,6 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class PawnSlotPresenter : UnitBlueprintSlot
@@ -18,9 +19,9 @@ public class PawnSlotPresenter : UnitBlueprintSlot
 
     public UnitInstance UnitInstance { get { return unitBlueprint as UnitInstance; } }
 
-    public event UnitToSlotEventHandler OnSlotUnselected;
-    public event UnitToSlotEventHandler OnSlotSelected;
-    public event UnitToSlotEventHandler OnRemoveFromLineupConfirmed;
+    public UnityEvent<UnitInstance, int> OnSlotUnselected;
+    public UnityEvent<UnitInstance, int> OnSlotSelected;
+    public UnityEvent<UnitInstance, int> OnRemoveFromLineupConfirmed;
 
     public override void Start()
     {
@@ -32,8 +33,8 @@ public class PawnSlotPresenter : UnitBlueprintSlot
         Assert.IsNotNull(imgNone);
         Assert.IsNotNull(button);
 
-        Singleton.Instance.GameInstance.GameState.OnSlotChanged += GameState_OnSlotChanged;
-        Singleton.Instance.GameInstance.GameState.OnSelectedUnitChanged += GameState_OnSelectedUnitChanged;
+        Singleton.Instance.GameInstance.GameState.OnSlotChanged.AddListener(GameState_OnSlotChanged);
+        Singleton.Instance.GameInstance.GameState.OnSelectedUnitChanged.AddListener(GameState_OnSelectedUnitChanged);
 
         button.onClick.AddListener(Button_OnClick);
 

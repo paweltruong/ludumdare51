@@ -19,12 +19,12 @@ public class GameState
     public List<UnitInstance> Lineup = new List<UnitInstance>();
 
 
-    public event Action<int> OnTotalCoinsChanged;
-    public event Action<int> OnRecruitChanged;
-    public event Action<int> OnLineupLimitChanged;
-    public event Action<int> OnSlotChanged;
-    public event Action<EGamePhase> OnPhaseChanged;
-    public event Action<UnitInstance> OnSelectedUnitChanged;
+    public UnityEvent<int> OnTotalCoinsChanged;
+    public UnityEvent<int> OnRecruitChanged;
+    public UnityEvent<int> OnLineupLimitChanged;
+    public UnityEvent<int> OnSlotChanged;
+    public UnityEvent<EGamePhase> OnPhaseChanged;
+    public UnityEvent<UnitInstance> OnSelectedUnitChanged;
 
     public void ChangeSlot(UnitInstance unit, int destinationSlotIndex)
     {
@@ -49,8 +49,8 @@ public class GameState
         Slots[destinationSlotIndex] = unit;
         Slots[oldSlotIndex] = null;
 
-        OnSlotChanged(oldSlotIndex);
-        OnSlotChanged(destinationSlotIndex);
+        OnSlotChanged.Invoke(oldSlotIndex);
+        OnSlotChanged.Invoke(destinationSlotIndex);
 
         if (SelectedUnit == unit)
         {
@@ -88,7 +88,7 @@ public class GameState
     public void SelectUnit(UnitInstance unit)
     {
         SelectedUnit = unit;
-        if (OnSelectedUnitChanged != null) OnSelectedUnitChanged(unit);
+        if (OnSelectedUnitChanged != null) OnSelectedUnitChanged.Invoke(unit);
     }
 
     int GetSlotIndex(UnitInstance queryUnit)
@@ -128,7 +128,7 @@ public class GameState
             if (Slots[i] == null)
             {
                 Slots[i] = unit;
-                OnSlotChanged(i);
+                OnSlotChanged.Invoke(i);
                 return;
             }
         }

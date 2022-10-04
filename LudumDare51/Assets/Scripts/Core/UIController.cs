@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Assertions;
 using UnityEngine.UI;
 
@@ -42,14 +43,14 @@ public class UIController : MonoBehaviour
     CanvasGroup tilesCanvasGroup;
 
 
-    public event UnitBlueprintEventHandler OnRecruitmentConfirmed;
+    public UnityEvent<IUnitBlueprint> OnRecruitmentConfirmed;
 
-    public event UnitToSlotEventHandler OnPawnSlotUnselected;
-    public event UnitToSlotEventHandler OnPawnSlotSelected;
-    public event UnitToSlotEventHandler OnPawnRemoveFromLineupConfirmed;
+    public UnityEvent<UnitInstance, int> OnPawnSlotUnselected;
+    public UnityEvent<UnitInstance, int> OnPawnSlotSelected;
+    public UnityEvent<UnitInstance, int> OnPawnRemoveFromLineupConfirmed;
 
-    public event System.Action OnRecruitmentReroll;
-    public event System.Action OnSellSelected;
+    public UnityEvent OnRecruitmentReroll;
+    public UnityEvent OnSellSelected;
 
 
 
@@ -71,22 +72,21 @@ public class UIController : MonoBehaviour
 
         foreach (var pawnSlot in pawnSlots)
         {
-            pawnSlot.OnSlotUnselected += PawnSlot_OnSlotUnselected;
-            pawnSlot.OnSlotSelected += PawnSlot_OnSlotSelected;
-            pawnSlot.OnRemoveFromLineupConfirmed += PawnSlot_OnRemoveFromLineupConfirmed;
+            pawnSlot.OnSlotUnselected.AddListener(PawnSlot_OnSlotUnselected);
+            pawnSlot.OnSlotSelected.AddListener(PawnSlot_OnSlotSelected);
+            pawnSlot.OnRemoveFromLineupConfirmed.AddListener(PawnSlot_OnRemoveFromLineupConfirmed);
         }
 
         foreach (var recruitmentSlot in recruitmentSlots)
         {
-            recruitmentSlot.OnRecruitmentConfirmed += RecruitmentSlot_OnRecruitmentConfirmed;
+            recruitmentSlot.OnRecruitmentConfirmed.AddListener(RecruitmentSlot_OnRecruitmentConfirmed);
         }
         btnReroll.onClick.AddListener(BtnReroll_OnClick);
         btnSell.onClick.AddListener(BtnSell_OnClick);
 
-        Singleton.Instance.GameInstance.GameState.OnTotalCoinsChanged += GameState_OnTotalCoinsChanged;
-        Singleton.Instance.GameInstance.GameState.OnLineupLimitChanged += GameState_OnLineupLimitChanged;
-        Singleton.Instance.GameInstance.GameState.OnSelectedUnitChanged += GameState_OnSelectedUnitChanged;
-
+        Singleton.Instance.GameInstance.GameState.OnTotalCoinsChanged.AddListener(GameState_OnTotalCoinsChanged);
+        Singleton.Instance.GameInstance.GameState.OnLineupLimitChanged.AddListener(GameState_OnLineupLimitChanged);
+        Singleton.Instance.GameInstance.GameState.OnSelectedUnitChanged.AddListener(GameState_OnSelectedUnitChanged);
     }
 
     private void GameState_OnSelectedUnitChanged(UnitInstance obj)
@@ -96,17 +96,17 @@ public class UIController : MonoBehaviour
 
     private void PawnSlot_OnRemoveFromLineupConfirmed(UnitInstance lineupUnit, int targetSlotIndex)
     {
-        if (OnPawnRemoveFromLineupConfirmed != null) OnPawnRemoveFromLineupConfirmed(lineupUnit, targetSlotIndex);
+        if (OnPawnRemoveFromLineupConfirmed != null) OnPawnRemoveFromLineupConfirmed.Invoke(lineupUnit, targetSlotIndex);
     }
 
     private void PawnSlot_OnSlotUnselected(UnitInstance lineupUnit, int targetSlotIndex)
     {
-        if (OnPawnSlotUnselected != null) OnPawnSlotUnselected(lineupUnit, targetSlotIndex);
+        if (OnPawnSlotUnselected != null) OnPawnSlotUnselected.Invoke(lineupUnit, targetSlotIndex);
     }
 
     private void PawnSlot_OnSlotSelected(UnitInstance lineupUnit, int targetSlotIndex)
     {
-        if (OnPawnSlotSelected != null) OnPawnSlotSelected(lineupUnit, targetSlotIndex);
+        if (OnPawnSlotSelected != null) OnPawnSlotSelected.Invoke(lineupUnit, targetSlotIndex);
     }
 
     private void GameState_OnLineupLimitChanged(int lineupLimit)

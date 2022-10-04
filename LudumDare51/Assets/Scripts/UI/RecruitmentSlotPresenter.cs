@@ -2,6 +2,7 @@ using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Assertions;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class RecruitmentSlotPresenter : UnitBlueprintSlot
@@ -19,7 +20,7 @@ public class RecruitmentSlotPresenter : UnitBlueprintSlot
     [SerializeField]
     Color notEnoughCoinsColor;
 
-    public event UnitBlueprintEventHandler OnRecruitmentConfirmed;
+    public UnityEvent<IUnitBlueprint> OnRecruitmentConfirmed;
     
 
     public override void Start()
@@ -31,8 +32,8 @@ public class RecruitmentSlotPresenter : UnitBlueprintSlot
         Assert.IsNotNull(CostGO);
 
         //ResetSlot();
-        Singleton.Instance.GameInstance.GameState.OnTotalCoinsChanged += GameState_OnTotalCoinsChanged;
-        Singleton.Instance.GameInstance.GameState.OnRecruitChanged += GameState_OnRecruitChanged;
+        Singleton.Instance.GameInstance.GameState.OnTotalCoinsChanged.AddListener(GameState_OnTotalCoinsChanged);
+        Singleton.Instance.GameInstance.GameState.OnRecruitChanged.AddListener(GameState_OnRecruitChanged);
 
         button.onClick.AddListener(Button_OnClick);
 

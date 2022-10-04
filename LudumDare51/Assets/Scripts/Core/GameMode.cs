@@ -22,12 +22,12 @@ public class GameMode : MonoBehaviour
 
         Singleton.Instance.GameInstance.GameState.ResetState();
 
-        uiController.OnPawnSlotUnselected += UiController_OnPawnSlotUnselected;
-        uiController.OnPawnSlotSelected += UiController_OnPawnSlotSelected;
-        uiController.OnPawnRemoveFromLineupConfirmed += UiController_OnPawnRemoveFromLineupConfirmed;
-        uiController.OnRecruitmentConfirmed += UiController_OnRecruitmentConfirmed;
-        uiController.OnRecruitmentReroll += UiController_OnRecruitmentReroll;
-        uiController.OnSellSelected += UiController_OnSellSelected;
+        uiController.OnPawnSlotUnselected.AddListener(UiController_OnPawnSlotUnselected);
+        uiController.OnPawnSlotSelected.AddListener(UiController_OnPawnSlotSelected);
+        uiController.OnPawnRemoveFromLineupConfirmed.AddListener(UiController_OnPawnRemoveFromLineupConfirmed);
+        uiController.OnRecruitmentConfirmed.AddListener(UiController_OnRecruitmentConfirmed);
+        uiController.OnRecruitmentReroll.AddListener(UiController_OnRecruitmentReroll);
+        uiController.OnSellSelected.AddListener(UiController_OnSellSelected);
 
 
 
@@ -117,7 +117,7 @@ public class GameMode : MonoBehaviour
         uiController.UpdateLineupCount();
         uiController.HidePlacementUI();
 
-        uiController.OnRecruitmentConfirmed += UiController_OnRecruitmentConfirmedInIntro;
+        uiController.OnRecruitmentConfirmed.AddListener(UiController_OnRecruitmentConfirmedInIntro);
 
         RollRecruits();
         tutorialController.ShowStage(0);
@@ -125,7 +125,7 @@ public class GameMode : MonoBehaviour
 
     private void UiController_OnRecruitmentConfirmedInIntro(IUnitBlueprint unitBlueprint)
     {
-        uiController.OnRecruitmentConfirmed -= UiController_OnRecruitmentConfirmedInIntro;
+        uiController.OnRecruitmentConfirmed.AddListener(UiController_OnRecruitmentConfirmedInIntro);
         Stage_Intro_01();
     }
 
