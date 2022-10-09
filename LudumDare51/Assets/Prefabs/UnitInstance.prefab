@@ -48,6 +48,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   disableAgentOnAwake: 1
+  agent: {fileID: 8666398721880417373}
+  spriteRenderer: {fileID: 6713997149657994727}
 --- !u!195 &8666398721880417373
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -185,9 +185,18 @@ public class PawnSlotPresenter : UnitBlueprintSlot
                 SetStatus(ESlotStatus.Unavailable);
             }
         }
-        else  if (Singleton.Instance.GameInstance.GameState.SelectedUnit == null)
+        else if (Singleton.Instance.GameInstance.GameState.SelectedUnit == null)
         {
-            SetStatus(ESlotStatus.None);
+            if (unitBp != null)
+            {
+                //Set new unit to slot (recruit)?
+                SetStatus(ESlotStatus.None);
+            }
+            else
+            {
+                //removing from slot (sold?)
+                ResetSlot();
+            }
         }
     }
 

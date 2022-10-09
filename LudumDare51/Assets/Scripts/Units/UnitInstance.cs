@@ -7,9 +7,10 @@ public class UnitInstance : MonoBehaviour, IUnitInstance
 {
     [SerializeField]
     bool disableAgentOnAwake = true;
-
+    [SerializeField]
     NavMeshAgent agent;
     IUnitBlueprint blueprint;
+    [SerializeField]
     SpriteRenderer spriteRenderer;
     EUnitOwner owner;
 
@@ -24,9 +25,10 @@ public class UnitInstance : MonoBehaviour, IUnitInstance
 
     private void Awake()
     {
-        spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-        agent = GetComponentInChildren<NavMeshAgent>();
+    }
 
+    private void Start()
+    {
         Assert.IsNotNull(spriteRenderer);
         Assert.IsNotNull(agent);
         if (disableAgentOnAwake)
@@ -37,6 +39,12 @@ public class UnitInstance : MonoBehaviour, IUnitInstance
 
     public void Setup(IUnitBlueprint blueprint, EUnitOwner owner)
     {
+        if (blueprint == null) 
+        {
+            ResetData();
+            return;
+        }
+
         this.owner = owner;
         this.blueprint = blueprint;
         spriteRenderer.sprite = blueprint.GetSprite();
@@ -65,56 +73,56 @@ public class UnitInstance : MonoBehaviour, IUnitInstance
 
     public float GetBaseArmor()
     {
-        return blueprint.GetBaseArmor();
+        return blueprint == null ? 0 : blueprint.GetBaseArmor();
     }
 
     public float GetBaseAttackSpeed()
     {
-        return blueprint.GetBaseAttackSpeed();
+        return blueprint == null ? 0 : blueprint.GetBaseAttackSpeed();
     }
 
     public float GetBaseDodge()
     {
-        return blueprint.GetBaseDodge();
+        return blueprint == null ? 0 : blueprint.GetBaseDodge();
     }
 
     public float GetBaseDodgeCooldown()
     {
-        return blueprint.GetBaseDodgeCooldown();
+        return blueprint == null ? 0 : blueprint.GetBaseDodgeCooldown();
     }
 
     public float GetBaseHp()
     {
-        return blueprint.GetBaseHp();
+        return blueprint == null ? 0 : blueprint.GetBaseHp();
     }
     public float GetBaseMinDamage()
     {
-        return blueprint.GetBaseMinDamage();
+        return blueprint == null ? 0 : blueprint.GetBaseMinDamage();
     }
 
     public float GetBaseMaxDamage()
     {
-        return blueprint.GetBaseMaxDamage();
+        return blueprint == null ? 0 : blueprint.GetBaseMaxDamage();
     }
 
 
     public float GetBaseMoveSpeed()
     {
-        return blueprint.GetBaseMoveSpeed();
+        return blueprint == null ? 0 : blueprint.GetBaseMoveSpeed();
     }
 
     public float GetBaseRange()
     {
-        return blueprint.GetBaseRange();
+        return blueprint == null ? 0 : blueprint.GetBaseRange();
     }
 
     public EUnitTier GetTier()
     {
-        return blueprint.GetTier();
+        return blueprint == null ? EUnitTier.Tier1 : blueprint.GetTier();
     }
     public int GetCost()
     {
-        return blueprint.GetCost();
+        return blueprint == null ? 0 : blueprint.GetCost();
     }
 
     public float GetCurrentHp()
@@ -124,38 +132,38 @@ public class UnitInstance : MonoBehaviour, IUnitInstance
 
     public string GetDesc()
     {
-        return blueprint.GetDesc();
+        return blueprint == null ? string.Empty : blueprint.GetDesc();
     }
 
     public int GetLevel()
     {
-        return blueprint.GetLevel();
+        return blueprint == null ? 1 : blueprint.GetLevel();
     }
 
     public float GetMaxHp()
     {
-        return blueprint.GetBaseHp();
+        return blueprint == null ? 0 : blueprint.GetBaseHp();
     }
 
     public string GetName()
     {
-        return blueprint.GetName();
+        return blueprint == null ? string.Empty : blueprint.GetName();
     }
 
     public IUnitBlueprint GetUpgradeBlueprint()
     {
-        return blueprint.GetUpgradeBlueprint();
+        return blueprint == null? null : blueprint.GetUpgradeBlueprint();
     }
 
     public float RollDamage()
     {
 
-        return Random.Range(blueprint.GetBaseMinDamage(), blueprint.GetBaseMaxDamage());
+        return blueprint == null ? 0 : Random.Range(blueprint.GetBaseMinDamage(), blueprint.GetBaseMaxDamage());
     }
 
     public Sprite GetSprite()
     {
-        return blueprint.GetSprite();
+        return blueprint == null ? null : blueprint.GetSprite();
     }
     #endregion IUnitInstance
 

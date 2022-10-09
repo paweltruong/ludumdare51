@@ -12,8 +12,8 @@ public class GameInstance : MonoBehaviour
 
     public GameConfiguration Configuration { get { return configuration; } }
 
-    private void Start()
+    private void Awake()
     {
-        GameState = new GameState();
+        GameState = new GameState();        
     }
 }

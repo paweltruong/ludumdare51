@@ -1,22 +1,34 @@
 using UnityEngine;
+using UnityEngine.Assertions;
+using UnityEngine.Rendering;
 
 public class Singleton : MonoBehaviour
 {
+    [SerializeField] SceneManager _sceneManager;
+    [SerializeField] GameInstance _gameInstance;
+    [SerializeField] AudioManager _audioManager;
+
     public static Singleton Instance { get; private set; }
-    public SceneManager SceneManager { get; private set; }
-    public GameInstance GameInstance { get; private set; }
-    public AudioManager AudioManager { get; private set; }
+    public SceneManager SceneManager => _sceneManager;
+    public GameInstance GameInstance => _gameInstance;
+    public AudioManager AudioManager => _audioManager;
 
     private void Awake()
     {
+        //fix this bug https://forum.unity.com/threads/errors-with-the-urp-debug-manager.987795/
+        DebugManager.instance.enableRuntimeUI = false;
+     
         if (Instance != null && Instance != this)
         {
             Destroy(this);
             return;
         }
         Instance = this;
-        SceneManager = GetComponentInChildren<SceneManager>();
-        GameInstance = GetComponentInChildren<GameInstance>();
-        AudioManager = GetComponentInChildren<AudioManager>();
+    }
+    private void Start()
+    {
+        Assert.IsNotNull(SceneManager);
+        Assert.IsNotNull(GameInstance);
+        Assert.IsNotNull(AudioManager);      
     }
 }

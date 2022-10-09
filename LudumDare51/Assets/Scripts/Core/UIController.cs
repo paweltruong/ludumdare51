@@ -111,13 +111,13 @@ public class UIController : MonoBehaviour
 
     private void GameState_OnLineupLimitChanged(int lineupLimit)
     {
-        UpdateLineupCount(Singleton.Instance.GameInstance.GameState.GetPlayerLineUp().Count(), lineupLimit);
+        UpdateLineupCountInternal(Singleton.Instance.GameInstance.GameState.GetPlayerLineUp().Count(), lineupLimit);
     }
     public void UpdateLineupCount()
     {
-        UpdateLineupCount(Singleton.Instance.GameInstance.GameState.GetPlayerLineUp().Count(), Singleton.Instance.GameInstance.GameState.LineUpLimit);
+        UpdateLineupCountInternal(Singleton.Instance.GameInstance.GameState.GetPlayerLineUp().Count(), Singleton.Instance.GameInstance.GameState.LineUpLimit);
     }
-    void UpdateLineupCount(int lineupCount, int lineupLimit)
+    void UpdateLineupCountInternal(int lineupCount, int lineupLimit)
     {
         txtLineUpValue.text = string.Format("{0}/{1}", lineupCount, lineupLimit);
     }

@@ -18,7 +18,9 @@ public class GameMode : MonoBehaviour
         Assert.IsNotNull(mapContainer);
         Assert.IsNotNull(uiController);
         Assert.IsNotNull(tutorialController);
-
+        Assert.IsNotNull(Singleton.Instance);
+        Assert.IsNotNull(Singleton.Instance.GameInstance);
+        Assert.IsNotNull(Singleton.Instance.GameInstance.GameState);
 
         Singleton.Instance.GameInstance.GameState.ResetState();
 
@@ -33,8 +35,8 @@ public class GameMode : MonoBehaviour
 
         Stage_Intro_00();
 
-        //StartNextBattle();
-        //uiController.Announce("Game begins!");
+        ////StartNextBattle();
+        ////uiController.Announce("Game begins!");
     }
 
     private void UiController_OnSellSelected()
@@ -70,6 +72,13 @@ public class GameMode : MonoBehaviour
 
     void RecruitUnit(IUnitBlueprint unitBlueprint)
     {
+        Assert.IsNotNull(unitBlueprint);
+        if (unitBlueprint == null)
+        {
+            Debug.LogError("Recruiting unit is null?");
+            return;
+        }
+
         //Create unit instance
         var newUnit = UnitsPool.Instance.GetNewUnitFromPool();
         newUnit.Setup(unitBlueprint, EUnitOwner.Player1);
@@ -112,9 +121,14 @@ public class GameMode : MonoBehaviour
     void Stage_Intro_00()
     {
         Singleton.Instance.GameInstance.GameState.SetPhase(EGamePhase.Preparation);
+
+        //w web gl sie crushuje
         uiController.UpdateCoinsUI();
+        //dotad dziala
         uiController.UpdateRerollUI();
+        //dot¹d dzia³¹ czyli UpdateLineupCount wywala
         uiController.UpdateLineupCount();
+        //nie przechodzi przed tym
         uiController.HidePlacementUI();
 
         uiController.OnRecruitmentConfirmed.AddListener(UiController_OnRecruitmentConfirmedInIntro);
@@ -145,6 +159,5 @@ public class GameMode : MonoBehaviour
             var unitBP = unitSetConfig.GetRandomUnit();
             Singleton.Instance.GameInstance.GameState.SetRecruit(i, unitBP);
         }
-
     }
 }

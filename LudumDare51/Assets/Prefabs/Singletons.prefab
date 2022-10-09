@@ -514,6 +514,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9667cc394baa97940baa46105d29f322, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _sceneManager: {fileID: 1568011152382354281}
+  _gameInstance: {fileID: 2408762352343367123}
+  _audioManager: {fileID: 1030484077}
 --- !u!1 &6953649954011866130
 GameObject:
   m_ObjectHideFlags: 0
