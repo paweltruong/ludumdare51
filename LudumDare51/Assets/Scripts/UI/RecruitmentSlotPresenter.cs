@@ -27,6 +27,9 @@ public class RecruitmentSlotPresenter : UnitBlueprintSlot
     {
         base.Start();
 
+        Assert.IsNotNull(txtName);
+        Assert.IsNotNull(txtDesc);
+
         Assert.IsNotNull(txtCost);
         Assert.IsNotNull(button);
         Assert.IsNotNull(CostGO);

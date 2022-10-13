@@ -12,6 +12,7 @@ public class GameState
     public int LineUpLimit = 1;
     public int SlotsUnlocked = 0;
     public UnitInstance[] Slots = new UnitInstance[8];
+    public UnitInstance[] PlayerTiles = new UnitInstance[32];
     public List<UnitInstance> PlayerUnits = new List<UnitInstance>();
     public UnitBlueprint[] Recruits = new UnitBlueprint[3];
     public UnitInstance SelectedUnit;
@@ -49,13 +50,12 @@ public class GameState
         Slots[destinationSlotIndex] = unit;
         Slots[oldSlotIndex] = null;
 
-        OnSlotChanged.Invoke(oldSlotIndex);
-        OnSlotChanged.Invoke(destinationSlotIndex);
-
-        if (SelectedUnit == unit)
+        if (SelectedUnit)
         {
             SelectUnit(null);
         }
+        OnSlotChanged.Invoke(oldSlotIndex);
+        OnSlotChanged.Invoke(destinationSlotIndex);
     }
     public void SellSelectedUnit()
     {
@@ -64,17 +64,16 @@ public class GameState
     }
     void RemoveUnit(UnitInstance unit)
     {
+        Singleton.Instance.GameInstance.GameState.SelectUnit(null);
         for (int i = 0; i < Slots.Length; i++)
         {
-            if (Slots[i] = unit)
+            if (Slots[i] == unit)
             {
                 unit.CleanupForPooling();
                 Slots[i] = null;
-                if(OnSlotChanged != null) OnSlotChanged.Invoke(i);
-                break;
+            if (OnSlotChanged != null) OnSlotChanged.Invoke(i);
             }
         }
-        Singleton.Instance.GameInstance.GameState.SelectUnit(null);
     }
 
     public void ReturnFromLineupToSlot(UnitInstance unit, int slotIndex)
@@ -102,12 +101,12 @@ public class GameState
     public void SetPhase(EGamePhase newPhase)
     {
         CurrentPhase = newPhase;
-        if(OnPhaseChanged!= null) OnPhaseChanged.Invoke(CurrentPhase);
+        if (OnPhaseChanged != null) OnPhaseChanged.Invoke(CurrentPhase);
     }
 
     public IEnumerable<UnitInstance> GetPlayerLineUp()
     {
-        return PlayerUnits.Where(x=>x.IsInLineup);
+        return PlayerUnits.Where(x => x.IsInLineup);
     }
 
     public void ResetState()
@@ -125,7 +124,7 @@ public class GameState
     {
         for (int i = 0; i < Slots.Length; i++)
         {
-            if (Slots[i] == null)
+            if (!Slots[i])
             {
                 Slots[i] = unit;
                 OnSlotChanged.Invoke(i);
@@ -160,7 +159,7 @@ public class GameState
         int count = 0;
         for (int i = 0; i < SlotsUnlocked; i++)
         {
-            if (Slots[i] == null) ++count;
+            if (!Slots[i]) ++count;
         }
         return count;
     }

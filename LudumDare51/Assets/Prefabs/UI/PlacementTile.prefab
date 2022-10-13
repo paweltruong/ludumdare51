@@ -130,6 +130,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 633710541389939225}
+  - component: {fileID: 6902693802358656275}
+  - component: {fileID: 395744341728214603}
   m_Layer: 5
   m_Name: PlacementTile
   m_TagString: Untagged
@@ -158,3 +160,47 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &6902693802358656275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7187087104310322900}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4df656f7764a4c48a89a5368bde18ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  masterCanvasGroup: {fileID: 395744341728214603}
+  txtName: {fileID: 0}
+  txtDesc: {fileID: 0}
+  slotIndex: -1
+  status: 0
+  colorAvailable: {r: 0, g: 0.7924528, b: 0.05384982, a: 1}
+  colorUnavailable: {r: 0.8784314, g: 0.08627455, b: 0.0862745, a: 1}
+  colorSelected: {r: 0.9811321, g: 0.90373707, b: 0.0509078, a: 1}
+  colorNone: {r: 0, g: 0, b: 0, a: 0.5019608}
+  imgButton: {fileID: 4999432905909550493}
+  button: {fileID: 2823636726673429182}
+  OnSlotUnselected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnSlotSelected:
+    m_PersistentCalls:
+      m_Calls: []
+  OnRemoveFromLineupConfirmed:
+    m_PersistentCalls:
+      m_Calls: []
+--- !u!225 &395744341728214603
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7187087104310322900}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0

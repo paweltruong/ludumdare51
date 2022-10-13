@@ -27,6 +27,9 @@ public class PawnSlotPresenter : UnitBlueprintSlot
     {
         base.Start();
 
+        Assert.IsNotNull(txtName);
+        Assert.IsNotNull(txtDesc);
+
         Assert.IsNotNull(imgAvailable);
         Assert.IsNotNull(imgUnavailable);
         Assert.IsNotNull(imgSelected);
@@ -92,67 +95,7 @@ public class PawnSlotPresenter : UnitBlueprintSlot
 
             }
         }
-
-
-        //switch (status)
-        //{
-        //    case ESlotStatus.Selected:
-        //        //deselect
-        //        SetStatus(ESlotStatus.None);
-        //        if (OnSlotUnselected != null) OnSlotUnselected.Invoke(UnitInstance, slotIndex);
-        //        break;
-        //    default:
-        //        if (Singleton.Instance.GameInstance.GameState.CurrentPhase == EGamePhase.Preparation)
-        //        {
-        //            ClickedInPreparationPhase();
-        //        }
-        //        else if (Singleton.Instance.GameInstance.GameState.CurrentPhase == EGamePhase.Trial)
-        //        {
-        //            ClickedInTrialPhase();
-        //        }
-        //        else
-        //        {
-        //        }
-        //        break;
-        //}
     }
-
-    //void ClickedInPreparationPhase()
-    //{
-    //    if (Singleton.Instance.GameInstance.GameState.SelectedUnit == null
-    //        && UnitInstance != null)
-    //    {
-    //        SetStatus(ESlotStatus.Selected);
-
-    //        //select this slot/unit
-    //        if (OnSlotSelected != null)
-    //            OnSlotSelected(UnitInstance, slotIndex);
-    //        return;
-    //    }
-
-    //    if (Singleton.Instance.GameInstance.GameState.SelectedUnit != null
-    //        && Singleton.Instance.GameInstance.GameState.SelectedUnit.IsInLineup
-    //        && status == ESlotStatus.Available)
-    //    {
-    //        //return to slot from lineup
-    //        if (OnRemoveFromLineupConfirmed != null)
-    //            OnRemoveFromLineupConfirmed.Invoke(Singleton.Instance.GameInstance.GameState.SelectedUnit, slotIndex);
-    //        return;
-    //    }
-    //}
-    //void ClickedInTrialPhase()
-    //{
-    //    if (Singleton.Instance.GameInstance.GameState.SelectedUnit == null
-    //        && UnitInstance != null)
-    //    {
-    //        SetStatus(ESlotStatus.Selected);
-
-    //        //select this slot/unit
-    //        if (OnSlotSelected != null)
-    //            OnSlotSelected(UnitInstance, slotIndex);
-    //        return;
-    //    }
-    //}
 
     private void GameState_OnSlotChanged(int slotIndex)
     {
@@ -171,7 +114,7 @@ public class PawnSlotPresenter : UnitBlueprintSlot
         {
             SetStatus(ESlotStatus.Selected);
         }
-        else if (Singleton.Instance.GameInstance.GameState.SelectedUnit != null
+        else if (Singleton.Instance.GameInstance.GameState.SelectedUnit
             && Singleton.Instance.GameInstance.GameState.CurrentPhase == EGamePhase.Preparation)
         {
             if (unitBp == null)
@@ -185,7 +128,7 @@ public class PawnSlotPresenter : UnitBlueprintSlot
                 SetStatus(ESlotStatus.Unavailable);
             }
         }
-        else if (Singleton.Instance.GameInstance.GameState.SelectedUnit == null)
+        else if (Singleton.Instance.GameInstance.GameState.SelectedUnit)
         {
             if (unitBp != null)
             {
@@ -198,12 +141,30 @@ public class PawnSlotPresenter : UnitBlueprintSlot
                 ResetSlot();
             }
         }
+        else
+        {
+            SetStatus(ESlotStatus.None);
+            if (unitBp == null)
+            {
+                //There is no selected unit
+                ResetSlot();
+            }
+            else
+            {
+            }
+        }
+    }
+
+    protected override void UpdateUI()
+    {
+        base.UpdateUI();
+
+        if(unitBlueprint == null && txtDesc) txtDesc.text = "empty";
     }
 
     protected override void ResetSlot()
     {
         base.ResetSlot();
-        txtDesc.text = "empty";
     }
 
     public override void SetStatus(ESlotStatus newStatus)

@@ -19,8 +19,6 @@ public class UnitBlueprintSlot : CanvasGroupMonobehaviour
     {
         base.Start();
 
-        Assert.IsNotNull(txtName);
-        Assert.IsNotNull(txtDesc);
         Assert.IsNotNull(masterCanvasGroup);
 
         ResetSlot();
@@ -30,26 +28,32 @@ public class UnitBlueprintSlot : CanvasGroupMonobehaviour
     {
         this.unitBlueprint = unitBp;
 
-        if (unitBlueprint == null)
-        {
-            ResetSlot();
-            return;
-        }
-
-        txtName.text = unitBlueprint.GetName();
-        txtDesc.text = unitBlueprint.ToShortLevelString();
+        UpdateUI();
     }
-
-    protected virtual void ResetSlot()
-    {
-        unitBlueprint = null;
-        txtName.text = string.Empty;
-        txtDesc.text = string.Empty;
-        SetStatus(ESlotStatus.None);
-    }
-
     public virtual void SetStatus(ESlotStatus newStatus)
     {
         this.status = newStatus;
+        UpdateUI();
+    }
+
+    protected virtual void UpdateUI()
+    {
+        if (unitBlueprint != null)
+        {
+            if (txtName) txtName.text = unitBlueprint.GetName();
+            if (txtDesc) txtDesc.text = unitBlueprint.ToShortLevelString();
+        }
+        else
+        {
+            if (txtName) txtName.text = string.Empty;
+            if (txtDesc) txtDesc.text = string.Empty;
+        }
+    }
+
+
+    protected virtual void ResetSlot()
+    {
+        this.unitBlueprint = null;
+        UpdateUI();
     }
 }
