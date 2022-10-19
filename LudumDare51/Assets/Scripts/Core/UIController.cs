@@ -43,7 +43,7 @@ public class UIController : MonoBehaviour
     CanvasGroup tilesCanvasGroup;
 
 
-    public UnityEvent<IUnitBlueprint> OnRecruitmentConfirmed;
+    public UnityEvent<IUnitBlueprint, int> OnRecruitmentConfirmed;
 
     public UnityEvent<UnitInstance, int> OnPawnSlotUnselected;
     public UnityEvent<UnitInstance, int> OnPawnSlotSelected;
@@ -138,9 +138,9 @@ public class UIController : MonoBehaviour
         OnSellSelected.Invoke();
     }
 
-    private void RecruitmentSlot_OnRecruitmentConfirmed(IUnitBlueprint obj)
+    private void RecruitmentSlot_OnRecruitmentConfirmed(IUnitBlueprint obj, int slotIndex)
     {
-        this.OnRecruitmentConfirmed.Invoke(obj);
+        this.OnRecruitmentConfirmed.Invoke(obj, slotIndex);
     }
 
     public void Announce(string text)
@@ -178,30 +178,56 @@ public class UIController : MonoBehaviour
             Singleton.Instance.GameInstance.Configuration.SpriteAtlas_Coin
             );
 
-        bool lastCoinToSpendOnRerollAtStartOfGame = (Singleton.Instance.GameInstance.GameState.PlayerCoins - rollCost <= 0)
-            && Singleton.Instance.GameInstance.GameState.PlayerUnits.Count == 0;
+        bool rerollEnabled = true;
 
-        btnReroll.gameObject.SetActive(
-            rollCost >= 0
-            && Singleton.Instance.GameInstance.GameState.PlayerCoins >= rollCost
-            && !lastCoinToSpendOnRerollAtStartOfGame
-            );
+        if (rollCost < 0)
+        {
+            //error?
+            rerollEnabled = false;
+        }
+        if (Singleton.Instance.GameInstance.GameState.PlayerCoins <= rollCost)
+        {
+            //not enough gold
+            rerollEnabled = false;
+        }
+        if (Singleton.Instance.GameInstance.GameState.PlayerUnits.Count == 0
+            && Singleton.Instance.GameInstance.GameState.PlayerCoins - rollCost <= 0)
+        {
+            //player dont have any units, and after reroll will not have any gold
+            rerollEnabled = false;
+        }
+
+        btnReroll.gameObject.SetActive(rerollEnabled);
     }
 
 
     public void UpdateSellUI()
     {
-        //TODO:nie mozna sprzedac ostaniej jednostki jak nie stac na reroll
-        bool cannotSellIfNoRecruitsAndNoCoinForReroll = true;
-            //Singleton.Instance.GameInstance.GameState.SelectedUnit != null 
-            //&& Singleton.Instance.GameInstance.GameState.AvailableRecruitsCount() > 0 ||
-            //(Singleton.Instance.GameInstance.GameState.SelectedUnit.GetCost() );
+        bool sellEnabled = true;
 
-        btnSell.gameObject.SetActive(Singleton.Instance.GameInstance.GameState.SelectedUnit != null 
-            && Singleton.Instance.GameInstance.GameState.SelectedUnit.GetCost() > 0
-            && cannotSellIfNoRecruitsAndNoCoinForReroll);
+        if(!Singleton.Instance.GameInstance.GameState.SelectedUnit)
+        {
+            //no unit is selected
+            sellEnabled = false;
+        }
+        if (Singleton.Instance.GameInstance.GameState.SelectedUnit 
+            && Singleton.Instance.GameInstance.GameState.SelectedUnit.GetCost() < 0)
+        {
+            //selected units value is graeter than 0
+            sellEnabled = false;
+        }
+        if (Singleton.Instance.GameInstance.GameState.SelectedUnit 
+            && Singleton.Instance.GameInstance.GameState.GetPlayerUnitsCount() == 1  
+            && Singleton.Instance.GameInstance.GameState.GetAvailableRecruitsCount() == 0
+            &&Singleton.Instance.GameInstance.GameState.SelectedUnit.GetCost() < Singleton.Instance.GameInstance.GameState.GetCurrentRerollCost() + 1)
+        {
+            //There ar no more available recruits and selling last unit will not allow reroll(not enough gold
+            sellEnabled = false;
+        }
 
-        if (Singleton.Instance.GameInstance.GameState.SelectedUnit != null)
+            btnSell.gameObject.SetActive(sellEnabled);
+
+        if (Singleton.Instance.GameInstance.GameState.SelectedUnit)
         {
             var sellCost = Singleton.Instance.GameInstance.GameState.SelectedUnit.GetCost();
             txtSell.text = string.Format("Sell unit for {0} {1}",

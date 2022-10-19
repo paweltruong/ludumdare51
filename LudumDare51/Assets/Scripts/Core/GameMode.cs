@@ -59,9 +59,9 @@ public class GameMode : MonoBehaviour
         throw new System.NotImplementedException();
     }
 
-    private void UiController_OnRecruitmentConfirmed(IUnitBlueprint unitBlueprint)
+    private void UiController_OnRecruitmentConfirmed(IUnitBlueprint unitBlueprint, int slotIndex)
     {
-        RecruitUnit(unitBlueprint);
+        RecruitUnit(unitBlueprint, slotIndex);
     }
     private void UiController_OnRecruitmentReroll()
     {
@@ -70,7 +70,7 @@ public class GameMode : MonoBehaviour
     }
 
 
-    void RecruitUnit(IUnitBlueprint unitBlueprint)
+    void RecruitUnit(IUnitBlueprint unitBlueprint, int slotIndex)
     {
         Assert.IsNotNull(unitBlueprint);
         if (unitBlueprint == null)
@@ -86,8 +86,14 @@ public class GameMode : MonoBehaviour
         //Add to slot
         Singleton.Instance.GameInstance.GameState.AddToFreeSlot(newUnit);
 
+        //Remove recruit
+        Singleton.Instance.GameInstance.GameState.ResetRecruitAt(slotIndex);
+
         //Substract cost
         Singleton.Instance.GameInstance.GameState.SubstractCoins(unitBlueprint.GetCost());
+
+        //Add unit
+        Singleton.Instance.GameInstance.GameState.AddPlayerUnit(newUnit);
     }
 
     void StartNextBattle()
@@ -122,13 +128,10 @@ public class GameMode : MonoBehaviour
     {
         Singleton.Instance.GameInstance.GameState.SetPhase(EGamePhase.Preparation);
 
-        //w web gl sie crushuje
         uiController.UpdateCoinsUI();
-        //dotad dziala
         uiController.UpdateRerollUI();
-        //dot¹d dzia³¹ czyli UpdateLineupCount wywala
+        uiController.UpdateSellUI();
         uiController.UpdateLineupCount();
-        //nie przechodzi przed tym
         uiController.HidePlacementUI();
 
         uiController.OnRecruitmentConfirmed.AddListener(UiController_OnRecruitmentConfirmedInIntro);
@@ -137,7 +140,7 @@ public class GameMode : MonoBehaviour
         tutorialController.ShowStage(0);
     }
 
-    private void UiController_OnRecruitmentConfirmedInIntro(IUnitBlueprint unitBlueprint)
+    private void UiController_OnRecruitmentConfirmedInIntro(IUnitBlueprint unitBlueprint, int slotIndex)
     {
         uiController.OnRecruitmentConfirmed.AddListener(UiController_OnRecruitmentConfirmedInIntro);
         Stage_Intro_01();

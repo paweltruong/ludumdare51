@@ -20,7 +20,7 @@ public class RecruitmentSlotPresenter : UnitBlueprintSlot
     [SerializeField]
     Color notEnoughCoinsColor;
 
-    public UnityEvent<IUnitBlueprint> OnRecruitmentConfirmed;
+    public UnityEvent<IUnitBlueprint, int> OnRecruitmentConfirmed;
     
 
     public override void Start()
@@ -88,7 +88,7 @@ public class RecruitmentSlotPresenter : UnitBlueprintSlot
             return;
         }
 
-        OnRecruitmentConfirmed.Invoke(unitBlueprint);
+        OnRecruitmentConfirmed.Invoke(unitBlueprint, slotIndex);
 
         //Slot used - Disable this slot
         ResetSlot();

@@ -65,15 +65,21 @@ public class GameState
     void RemoveUnit(UnitInstance unit)
     {
         Singleton.Instance.GameInstance.GameState.SelectUnit(null);
+
+        //remove ftom slots
         for (int i = 0; i < Slots.Length; i++)
         {
             if (Slots[i] == unit)
             {
                 unit.CleanupForPooling();
                 Slots[i] = null;
-            if (OnSlotChanged != null) OnSlotChanged.Invoke(i);
+                if (OnSlotChanged != null) OnSlotChanged.Invoke(i);
             }
         }
+
+        //todo:remove from tiles
+
+        PlayerUnits.Remove(unit);
     }
 
     public void ReturnFromLineupToSlot(UnitInstance unit, int slotIndex)
@@ -143,6 +149,12 @@ public class GameState
         Recruits[index] = unitBlueprint;
         if (OnRecruitChanged != null) OnRecruitChanged.Invoke(index);
     }
+
+    public void ResetRecruitAt(int recruitSlotIndex)
+    {
+        if (Recruits.Length > recruitSlotIndex) Recruits[recruitSlotIndex] = null;
+    }
+
     public void AddCoins(int amount)
     {
         PlayerCoins = Math.Clamp(PlayerCoins + amount, 0, 100000);
@@ -163,6 +175,17 @@ public class GameState
         }
         return count;
     }
+
+    public int GetAvailableRecruitsCount()
+    {
+        int count = 0;
+        for (int i = 0; i < Recruits.Length; i++)
+        {
+            if (Recruits[i]) ++count;
+        }
+        return count;
+    }
+
     public int GetCurrentRerollCost()
     {
         if (CurrentTrialIndex < 0 || CurrentTrialIndex > Singleton.Instance.GameInstance.Configuration.RerollCostPerTrialIndex.Length)
@@ -171,6 +194,32 @@ public class GameState
             return -1;
         }
         return Singleton.Instance.GameInstance.Configuration.RerollCostPerTrialIndex[CurrentTrialIndex];
+    }
+
+    public bool CanAffordAnyRecruit(out int recruitCost)
+    {
+        recruitCost = 0;
+        for (int i = 0; i < Recruits.Length; i++)
+        {
+            if (Recruits[i] && Singleton.Instance.GameInstance.GameState.PlayerCoins >= Recruits[i].GetCost())
+            {
+                recruitCost = Recruits[i].GetCost();
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public int GetPlayerUnitsCount()
+    {
+        return PlayerUnits.Count;
+    }
+
+
+    public void AddPlayerUnit(UnitInstance newUnit)
+    {
+        if (!PlayerUnits.Contains(newUnit))
+            PlayerUnits.Add(newUnit);
     }
 
 }
