@@ -19,4 +19,5 @@ public interface IUnitBlueprint
     float GetBaseDodgeCooldown();
     float GetBaseRange();
     Sprite GetSprite();
+    Sprite GetIcon();
 }

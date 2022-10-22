@@ -51,12 +51,18 @@ public class GameMode : MonoBehaviour
 
     private void UiController_OnPawnSlotSelected(UnitInstance unit, int targetSlotIndex)
     {
-        Singleton.Instance.GameInstance.GameState.SelectUnit(unit);
+        //Singleton.Instance.GameInstance.GameState.SelectUnit(unit);
+        uiController.UpdatePlacementData();
     }
 
     private void UiController_OnPawnSlotUnselected(UnitInstance unit, int targetSlotIndex)
     {
-        throw new System.NotImplementedException();
+       
+    }
+    private void UIController_OnUnitSelectedInIntro01(UnitInstance unit, int targetSlotIndex)
+    {
+        uiController.OnPawnSlotSelected.RemoveListener(UIController_OnUnitSelectedInIntro01);
+        Stage_Intro_02();
     }
 
     private void UiController_OnRecruitmentConfirmed(IUnitBlueprint unitBlueprint, int slotIndex)
@@ -148,8 +154,22 @@ public class GameMode : MonoBehaviour
 
     void Stage_Intro_01()
     {
-        uiController.ShowPlacementUI();
         tutorialController.ShowStage(1);
+
+        if (!Singleton.Instance.GameInstance.GameState.SelectedUnit)
+        {
+            uiController.OnPawnSlotSelected.AddListener(UIController_OnUnitSelectedInIntro01);
+        }
+        else
+        {
+            Stage_Intro_02();
+        }
+    }
+
+    void Stage_Intro_02()
+    {
+        tutorialController.ShowStage(2);
+        uiController.ShowPlacementUI();
     }
 
     void RollRecruits()

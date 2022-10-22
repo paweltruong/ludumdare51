@@ -16,6 +16,8 @@ MonoBehaviour:
   description: Rat can attack
   upgrade: {fileID: 0}
   sprite: {fileID: 767066602, guid: 4a68e627eccdc7b41919a6f429115400, type: 3}
+  icon: {fileID: 21300000, guid: 21c8f4c9197c10e45b3b131db1fa04fb, type: 3}
+  tier: 0
   cost: 1
   level: 1
   baseRange: 3

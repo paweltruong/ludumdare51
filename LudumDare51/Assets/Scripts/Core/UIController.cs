@@ -1,46 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using TMPro;
 using UnityEngine;
-using UnityEngine.Events;
 using UnityEngine.Assertions;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class UIController : MonoBehaviour
 {
-    [SerializeField]
-    Announcer announcer;
-    [SerializeField]
-    NumberPresenter coins;
-    [SerializeField]
-    NumberPresenter incomeTimer;
-    [SerializeField]
-    NumberPresenter trialCountdown;
-    [SerializeField]
-    PawnSlotPresenter[] pawnSlots;
+    [SerializeField] Announcer announcer;
+    [SerializeField] NumberPresenter coins;
+    [SerializeField] NumberPresenter incomeTimer;
+    [SerializeField] NumberPresenter trialCountdown;
+    [SerializeField] PawnSlotPresenter[] pawnSlots;
 
     [Header("Units")]
-    [SerializeField]
-    TextMeshProUGUI txtLineUpValue;
-
+    [SerializeField] TextMeshProUGUI txtLineUpValue;
     [Header("Recruitment")]
-    [SerializeField]
-    RecruitmentSlotPresenter[] recruitmentSlots;
-    [SerializeField]
-    Button btnReroll;
-    [SerializeField]
-    TextMeshProUGUI txtReroll;
+    [SerializeField] RecruitmentSlotPresenter[] recruitmentSlots;
+    [SerializeField] Button btnReroll;
+    [SerializeField] TextMeshProUGUI txtReroll;
     [Header("Shop")]
-    [SerializeField]
-    CanvasGroup shopCanvasGroup;
-    [SerializeField]
-    Button btnSell;
-    [SerializeField]
-    TextMeshProUGUI txtSell;
+    [SerializeField] CanvasGroup shopCanvasGroup;
+    [SerializeField] Button btnSell;
+    [SerializeField] TextMeshProUGUI txtSell;
     [Header("UnitPlacement")]
-    [SerializeField]
-    CanvasGroup tilesCanvasGroup;
+    [SerializeField] CanvasGroup tilesCanvasGroup;
+    [SerializeField] TileSlotPresenter[] Tiles;
 
 
     public UnityEvent<IUnitBlueprint, int> OnRecruitmentConfirmed;
@@ -69,6 +54,7 @@ public class UIController : MonoBehaviour
         Assert.IsNotNull(btnSell);
         Assert.IsNotNull(txtSell);
         Assert.IsNotNull(tilesCanvasGroup);
+        Assert.IsTrue(Tiles.Length > 0);
 
         foreach (var pawnSlot in pawnSlots)
         {
@@ -87,6 +73,7 @@ public class UIController : MonoBehaviour
         Singleton.Instance.GameInstance.GameState.OnTotalCoinsChanged.AddListener(GameState_OnTotalCoinsChanged);
         Singleton.Instance.GameInstance.GameState.OnLineupLimitChanged.AddListener(GameState_OnLineupLimitChanged);
         Singleton.Instance.GameInstance.GameState.OnSelectedUnitChanged.AddListener(GameState_OnSelectedUnitChanged);
+        Singleton.Instance.GameInstance.GameState.OnLineupChanged.AddListener(GameState_OnLineupChanged);
     }
 
     private void GameState_OnSelectedUnitChanged(UnitInstance obj)
@@ -128,6 +115,10 @@ public class UIController : MonoBehaviour
         UpdateRerollUI();
     }
 
+    private void GameState_OnLineupChanged()
+    {
+        UpdateLineupCount();
+    }
 
     void BtnReroll_OnClick()
     {
@@ -205,27 +196,27 @@ public class UIController : MonoBehaviour
     {
         bool sellEnabled = true;
 
-        if(!Singleton.Instance.GameInstance.GameState.SelectedUnit)
+        if (!Singleton.Instance.GameInstance.GameState.SelectedUnit)
         {
             //no unit is selected
             sellEnabled = false;
         }
-        if (Singleton.Instance.GameInstance.GameState.SelectedUnit 
+        if (Singleton.Instance.GameInstance.GameState.SelectedUnit
             && Singleton.Instance.GameInstance.GameState.SelectedUnit.GetCost() < 0)
         {
             //selected units value is graeter than 0
             sellEnabled = false;
         }
-        if (Singleton.Instance.GameInstance.GameState.SelectedUnit 
-            && Singleton.Instance.GameInstance.GameState.GetPlayerUnitsCount() == 1  
+        if (Singleton.Instance.GameInstance.GameState.SelectedUnit
+            && Singleton.Instance.GameInstance.GameState.GetPlayerUnitsCount() == 1
             && Singleton.Instance.GameInstance.GameState.GetAvailableRecruitsCount() == 0
-            &&Singleton.Instance.GameInstance.GameState.SelectedUnit.GetCost() < Singleton.Instance.GameInstance.GameState.GetCurrentRerollCost() + 1)
+            && Singleton.Instance.GameInstance.GameState.SelectedUnit.GetCost() < Singleton.Instance.GameInstance.GameState.GetCurrentRerollCost() + 1)
         {
             //There ar no more available recruits and selling last unit will not allow reroll(not enough gold
             sellEnabled = false;
         }
 
-            btnSell.gameObject.SetActive(sellEnabled);
+        btnSell.gameObject.SetActive(sellEnabled);
 
         if (Singleton.Instance.GameInstance.GameState.SelectedUnit)
         {
@@ -234,6 +225,41 @@ public class UIController : MonoBehaviour
                 sellCost,
                 Singleton.Instance.GameInstance.Configuration.SpriteAtlas_Coin
                 );
+        }
+    }
+
+    void UpdatePlacement()
+    {
+        foreach (var tile in Tiles)
+        {
+            tile.UpdateUI();
+        }
+    }
+
+    public void UpdatePlacementData()
+    {
+        var selectedUnit = Singleton.Instance.GameInstance.GameState.SelectedUnit;
+
+        for (int i = 0; i < Singleton.Instance.GameInstance.GameState.PlayerTiles.Length; ++i)
+        {
+            var tile = Tiles[i];
+
+            if (selectedUnit)
+            {
+                if(!Singleton.Instance.GameInstance.GameState.PlayerTiles[i])
+                    tile.SetStatus(ESlotStatus.Available);
+                else
+                {
+                    if(selectedUnit == Singleton.Instance.GameInstance.GameState.PlayerTiles[i])
+                        tile.SetStatus(ESlotStatus.Selected);
+                    else
+                        tile.SetStatus(ESlotStatus.Unavailable);
+                }
+            }
+            else
+            {
+                tile.SetStatus(ESlotStatus.None);
+            }
         }
     }
 
@@ -249,6 +275,7 @@ public class UIController : MonoBehaviour
     public void ShowPlacementUI()
     {
         tilesCanvasGroup.gameObject.SetActive(true);
+        UpdatePlacement();
     }
 
     public void HidePlacementUI()

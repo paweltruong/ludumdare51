@@ -61,6 +61,7 @@ public class PawnSlotPresenter : UnitBlueprintSlot
         {
             //Unselect
             Singleton.Instance.GameInstance.GameState.SelectUnit(null);
+            OnSlotUnselected.Invoke(UnitInstance, slotIndex);
         }
         else
         {
@@ -72,7 +73,6 @@ public class PawnSlotPresenter : UnitBlueprintSlot
                         if (Singleton.Instance.GameInstance.GameState.SelectedUnit.IsInLineup)
                         {
                             Singleton.Instance.GameInstance.GameState.ReturnFromLineupToSlot(Singleton.Instance.GameInstance.GameState.SelectedUnit, slotIndex);
-                            Singleton.Instance.GameInstance.GameState.SelectUnit(null);
 
                         }
                         else
@@ -85,10 +85,12 @@ public class PawnSlotPresenter : UnitBlueprintSlot
                     if (unitBlueprint != null && Singleton.Instance.GameInstance.GameState.SelectedUnit == null)
                     {
                         Singleton.Instance.GameInstance.GameState.SelectUnit(UnitInstance);
+                        OnSlotSelected.Invoke(UnitInstance, slotIndex);
                     }
                     break;
                 case EGamePhase.Trial:
                     Singleton.Instance.GameInstance.GameState.SelectUnit(UnitInstance);
+                    OnSlotSelected.Invoke(UnitInstance, slotIndex);
                     break;
                 default:
                     break;
@@ -155,11 +157,16 @@ public class PawnSlotPresenter : UnitBlueprintSlot
         }
     }
 
-    protected override void UpdateUI()
+    public override void UpdateUI()
     {
         base.UpdateUI();
 
         if(unitBlueprint == null && txtDesc) txtDesc.text = "empty";
+
+        imgAvailable.gameObject.SetActive(status == ESlotStatus.Available);
+        imgUnavailable.gameObject.SetActive(status == ESlotStatus.Unavailable);
+        imgSelected.gameObject.SetActive(status == ESlotStatus.Selected);
+        imgNone.gameObject.SetActive(status == ESlotStatus.None);
     }
 
     protected override void ResetSlot()
@@ -170,10 +177,5 @@ public class PawnSlotPresenter : UnitBlueprintSlot
     public override void SetStatus(ESlotStatus newStatus)
     {
         base.SetStatus(newStatus);
-
-        imgAvailable.gameObject.SetActive(status == ESlotStatus.Available);
-        imgUnavailable.gameObject.SetActive(status == ESlotStatus.Unavailable);
-        imgSelected.gameObject.SetActive(status == ESlotStatus.Selected);
-        imgNone.gameObject.SetActive(status == ESlotStatus.None);
     }
 }

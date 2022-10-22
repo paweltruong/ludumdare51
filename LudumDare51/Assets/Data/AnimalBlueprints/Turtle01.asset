@@ -16,6 +16,7 @@ MonoBehaviour:
   description: Slow
   upgrade: {fileID: 0}
   sprite: {fileID: 1551911614, guid: b673a2a209a06814ea3cd938350f3957, type: 3}
+  icon: {fileID: 21300000, guid: 0eae04deb5a57bb4686f7427c8546926, type: 3}
   tier: 0
   cost: 1
   level: 1

@@ -20,6 +20,7 @@ public class GameState
     public List<UnitInstance> Lineup = new List<UnitInstance>();
 
 
+    public UnityEvent OnLineupChanged = new UnityEvent();
     public UnityEvent<int> OnTotalCoinsChanged = new UnityEvent<int>();
     public UnityEvent<int> OnRecruitChanged = new UnityEvent<int>();
     public UnityEvent<int> OnLineupLimitChanged = new UnityEvent<int>();
@@ -62,6 +63,10 @@ public class GameState
         AddCoins(SelectedUnit.GetCost());
         RemoveUnit(SelectedUnit);
     }
+    public bool IsLineupFull()
+    {
+        return Lineup.Count >= LineUpLimit;
+    }
     void RemoveUnit(UnitInstance unit)
     {
         Singleton.Instance.GameInstance.GameState.SelectUnit(null);
@@ -86,9 +91,50 @@ public class GameState
     {
         Slots[slotIndex] = unit;
         Lineup.Remove(unit);
+        for (int i = 0; i < PlayerTiles.Length; ++i)
+        {
+            if (PlayerTiles[i] == unit)
+            {
+                PlayerTiles[i] = null;
+                break;
+            }
+        }
         unit.IsInLineup = false;
-
+        SelectUnit(null);
+        OnLineupChanged.Invoke();
     }
+
+    public void MoveToLineupFromPawnSlot(UnitInstance unit, int tileSlotIndex)
+    {
+        //remove from pawn slot
+        for (int i = 0; i < Slots.Length; ++i)
+        {
+            if (Slots[i] == unit)
+            {
+                Slots[i] = null;
+            }
+        }
+
+        //remove from lineupslots
+        if (unit.IsInLineup)
+        {
+            for (int i = 0; i < PlayerTiles.Length; ++i)
+            {
+                if (PlayerTiles[i] == unit)
+                {
+                    PlayerTiles[i] = null;
+                }
+            }
+        }
+
+        PlayerTiles[tileSlotIndex] = unit;
+        Lineup.Add(unit);
+        unit.IsInLineup = true;
+
+        SelectUnit(null);
+        OnLineupChanged.Invoke();
+    }
+
 
     public void SelectUnit(UnitInstance unit)
     {

@@ -16,6 +16,8 @@ public class TileSlotPresenter : UnitBlueprintSlot
     [SerializeField]
     protected Image imgButton;
     [SerializeField]
+    protected Image imgUnitIcon;
+    [SerializeField]
     protected Button button;
 
 
@@ -30,6 +32,7 @@ public class TileSlotPresenter : UnitBlueprintSlot
         base.Start();
 
         Assert.IsNotNull(imgButton);
+        Assert.IsNotNull(imgUnitIcon);
         Assert.IsNotNull(button);
 
         Singleton.Instance.GameInstance.GameState.OnSelectedUnitChanged.AddListener(GameState_OnSelectedUnitChanged);
@@ -52,29 +55,34 @@ public class TileSlotPresenter : UnitBlueprintSlot
         switch (Singleton.Instance.GameInstance.GameState.CurrentPhase)
         {
             case EGamePhase.Preparation:
-                if (Singleton.Instance.GameInstance.GameState.SelectedUnit == UnitInstance)
+                if (!Singleton.Instance.GameInstance.GameState.SelectedUnit)
                 {
-                    //Unselect
-                    Singleton.Instance.GameInstance.GameState.SelectUnit(null);
-                }
-                else if (unitBlueprint == null && Singleton.Instance.GameInstance.GameState.SelectedUnit)
-                {
-                    if (Singleton.Instance.GameInstance.GameState.SelectedUnit.IsInLineup)
+                    if (UnitInstance)
                     {
-                        Singleton.Instance.GameInstance.GameState.ReturnFromLineupToSlot(Singleton.Instance.GameInstance.GameState.SelectedUnit, slotIndex);
-                        Singleton.Instance.GameInstance.GameState.SelectUnit(null);
-
+                        //Select unit on lineup
+                        Singleton.Instance.GameInstance.GameState.SelectUnit(UnitInstance);
                     }
                     else
                     {
-                        //Change to this slot
-                        Singleton.Instance.GameInstance.GameState.ChangeSlot(Singleton.Instance.GameInstance.GameState.SelectedUnit, slotIndex);
+                        //clicking on empty lineuptile - no effect   
                     }
-                    return;
                 }
-                if (unitBlueprint != null && Singleton.Instance.GameInstance.GameState.SelectedUnit)
+                else
                 {
-                    Singleton.Instance.GameInstance.GameState.SelectUnit(UnitInstance);
+                    if (Singleton.Instance.GameInstance.GameState.SelectedUnit == UnitInstance)
+                    {
+                        //Clicked on selected lineup unit - deselect
+                        Singleton.Instance.GameInstance.GameState.SelectUnit(null);
+                    }
+                    else if (unitBlueprint == null)
+                    {
+                        //Move selected unit to empty placement tile
+                        Singleton.Instance.GameInstance.GameState.MoveToLineupFromPawnSlot(Singleton.Instance.GameInstance.GameState.SelectedUnit, slotIndex);
+                    }
+                    else
+                    {
+                        //Clicked on non empty placemnt tile - swap unit?
+                    }
                 }
                 break;
             default:
@@ -86,6 +94,29 @@ public class TileSlotPresenter : UnitBlueprintSlot
     public override void SetData(IUnitBlueprint unitBp)
     {
         base.SetData(unitBp);
+
+        if (!Singleton.Instance.GameInstance.GameState.SelectedUnit)
+        {
+            SetStatus(ESlotStatus.None);
+        }
+        else
+        {
+            if (UnitInstance)
+            {
+                if (unitBlueprint == unitBp)
+                {
+                    SetStatus(ESlotStatus.Selected);
+                }
+                else
+                {
+                    SetStatus(ESlotStatus.Unavailable);
+                }
+            }
+            else
+            {
+                SetStatus(ESlotStatus.Available);
+            }
+        }
 
         //if (UnitInstance == null && Singleton.Instance.GameInstance.GameState.SelectedUnit)
         //{
@@ -129,15 +160,9 @@ public class TileSlotPresenter : UnitBlueprintSlot
         //}
     }
 
-    protected override void ResetSlot()
+    public override void UpdateUI()
     {
-        base.ResetSlot();
-        if (txtDesc) txtDesc.text = "empty";
-    }
-
-    public override void SetStatus(ESlotStatus newStatus)
-    {
-        base.SetStatus(newStatus);
+        base.UpdateUI();
 
         Color newColor = imgButton.color;
         switch (status)
@@ -156,5 +181,27 @@ public class TileSlotPresenter : UnitBlueprintSlot
                 break;
         }
         imgButton.color = newColor;
+
+        if (unitBlueprint == null)
+        {
+            imgUnitIcon.sprite = null;
+            imgUnitIcon.gameObject.SetActive(false);
+        }
+        else
+        {
+            imgUnitIcon.sprite = unitBlueprint.GetIcon();
+            imgUnitIcon.gameObject.SetActive(true);
+        }
+    }
+
+    protected override void ResetSlot()
+    {
+        base.ResetSlot();
+        if (txtDesc) txtDesc.text = "empty";
+    }
+
+    public override void SetStatus(ESlotStatus newStatus)
+    {
+        base.SetStatus(newStatus);
     }
 }

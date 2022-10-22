@@ -8,6 +8,7 @@ public class UnitBlueprint : ScriptableObject, IUnitBlueprint
     [Tooltip("Upgrades to")]
     public UnitBlueprint upgrade;
     public Sprite sprite;
+    public Sprite icon;
     public EUnitTier tier = EUnitTier.Tier1;
     [Range(0, 100)]
     public int cost = 1;
@@ -56,6 +57,7 @@ public class UnitBlueprint : ScriptableObject, IUnitBlueprint
     public float GetBaseRange() { return baseRange; }
 
     public Sprite GetSprite() { return sprite; }
+    public Sprite GetIcon() { return icon; }
 
     #endregion
 }

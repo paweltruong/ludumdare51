@@ -165,6 +165,10 @@ public class UnitInstance : MonoBehaviour, IUnitInstance
     {
         return blueprint == null ? null : blueprint.GetSprite();
     }
+    public Sprite GetIcon()
+    {
+        return blueprint == null ? null : blueprint.GetIcon();
+    }
     #endregion IUnitInstance
 
     #region IPoolable

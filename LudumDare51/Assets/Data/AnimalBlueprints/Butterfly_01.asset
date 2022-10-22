@@ -16,6 +16,8 @@ MonoBehaviour:
   description: Flies gently
   upgrade: {fileID: 0}
   sprite: {fileID: 1577683061, guid: 1b6af908423a2bf4f859ee27d0f08969, type: 3}
+  icon: {fileID: 21300000, guid: 97acac5efd884b14ba727548d15db15a, type: 3}
+  tier: 0
   cost: 1
   level: 1
   baseRange: 5

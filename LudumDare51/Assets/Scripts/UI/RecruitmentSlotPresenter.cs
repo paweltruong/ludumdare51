@@ -37,6 +37,7 @@ public class RecruitmentSlotPresenter : UnitBlueprintSlot
         //ResetSlot();
         Singleton.Instance.GameInstance.GameState.OnTotalCoinsChanged.AddListener(GameState_OnTotalCoinsChanged);
         Singleton.Instance.GameInstance.GameState.OnRecruitChanged.AddListener(GameState_OnRecruitChanged);
+        Singleton.Instance.GameInstance.GameState.OnLineupChanged.AddListener(GameState_OnLineupChanged);
 
         button.onClick.AddListener(Button_OnClick);
 
@@ -67,6 +68,17 @@ public class RecruitmentSlotPresenter : UnitBlueprintSlot
         UpdateCostColor(coins);
     }
 
+    void GameState_OnLineupChanged()
+    {
+        if (Singleton.Instance.GameInstance.GameState.IsLineupFull())
+        {
+            SetStatus(ESlotStatus.Unavailable);
+        }
+        else
+        {
+            SetStatus(ESlotStatus.Available);
+        }
+    }
 
     public void Recruit()
     {
@@ -123,9 +135,9 @@ public class RecruitmentSlotPresenter : UnitBlueprintSlot
         SetStatus(ESlotStatus.Unavailable);
     }
 
-    public override void SetStatus(ESlotStatus newStatus)
+    public override void UpdateUI()
     {
-        base.SetStatus(newStatus);
+        base.UpdateUI();
 
         switch (this.status)
         {
@@ -138,5 +150,10 @@ public class RecruitmentSlotPresenter : UnitBlueprintSlot
                 CostGO.SetActive(false);
                 break;
         }
+    }
+
+    public override void SetStatus(ESlotStatus newStatus)
+    {
+        base.SetStatus(newStatus);
     }
 }

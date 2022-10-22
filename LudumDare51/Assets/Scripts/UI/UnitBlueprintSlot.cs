@@ -36,7 +36,7 @@ public class UnitBlueprintSlot : CanvasGroupMonobehaviour
         UpdateUI();
     }
 
-    protected virtual void UpdateUI()
+    public virtual void UpdateUI()
     {
         if (unitBlueprint != null)
         {
