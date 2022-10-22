@@ -74,6 +74,8 @@ public class UIController : MonoBehaviour
         Singleton.Instance.GameInstance.GameState.OnLineupLimitChanged.AddListener(GameState_OnLineupLimitChanged);
         Singleton.Instance.GameInstance.GameState.OnSelectedUnitChanged.AddListener(GameState_OnSelectedUnitChanged);
         Singleton.Instance.GameInstance.GameState.OnLineupChanged.AddListener(GameState_OnLineupChanged);
+        Singleton.Instance.GameInstance.GameState.OnTrialCountdownChanged.AddListener(GameState_OnTrialCountdownChanged);
+        Singleton.Instance.GameInstance.GameState.OnPhaseChanged.AddListener(GameState_OnPhaseChanged);
     }
 
     private void GameState_OnSelectedUnitChanged(UnitInstance obj)
@@ -108,6 +110,18 @@ public class UIController : MonoBehaviour
     {
         txtLineUpValue.text = string.Format("{0}/{1}", lineupCount, lineupLimit);
     }
+    void UpdateTrialCountdown()
+    {
+        trialCountdown.SetValue(Mathf.FloorToInt(Singleton.Instance.GameInstance.GameState.TrialCountdown));
+        if (Singleton.Instance.GameInstance.GameState.TrialCountdownEnabled)
+        {
+            trialCountdown.ShowImmediate();
+        }
+        else
+        {
+            trialCountdown.HideImmediate();
+        }
+    }
 
     private void GameState_OnTotalCoinsChanged(int coins)
     {
@@ -118,6 +132,17 @@ public class UIController : MonoBehaviour
     private void GameState_OnLineupChanged()
     {
         UpdateLineupCount();
+    }
+    void GameState_OnTrialCountdownChanged(float value)
+    {
+        UpdateTrialCountdown();
+    }
+    void GameState_OnPhaseChanged(EGamePhase newPhase)
+    {
+        if (newPhase == EGamePhase.Trial)
+        {
+            HidePlacementUI();
+        }
     }
 
     void BtnReroll_OnClick()
@@ -246,11 +271,11 @@ public class UIController : MonoBehaviour
 
             if (selectedUnit)
             {
-                if(!Singleton.Instance.GameInstance.GameState.PlayerTiles[i])
+                if (!Singleton.Instance.GameInstance.GameState.PlayerTiles[i])
                     tile.SetStatus(ESlotStatus.Available);
                 else
                 {
-                    if(selectedUnit == Singleton.Instance.GameInstance.GameState.PlayerTiles[i])
+                    if (selectedUnit == Singleton.Instance.GameInstance.GameState.PlayerTiles[i])
                         tile.SetStatus(ESlotStatus.Selected);
                     else
                         tile.SetStatus(ESlotStatus.Unavailable);

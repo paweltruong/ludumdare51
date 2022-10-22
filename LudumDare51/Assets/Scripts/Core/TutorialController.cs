@@ -21,4 +21,11 @@ public class TutorialController : MonoBehaviour
         }
     }
 
+    public void HideAll()
+    {
+        foreach (var stage in TutorialStages)
+        {
+            stage.FadeOut();
+        }
+    }
 }

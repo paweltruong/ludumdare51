@@ -31,12 +31,36 @@ public class GameMode : MonoBehaviour
         uiController.OnRecruitmentReroll.AddListener(UiController_OnRecruitmentReroll);
         uiController.OnSellSelected.AddListener(UiController_OnSellSelected);
 
-
+        Singleton.Instance.GameInstance.GameState.OnTrialBegins.AddListener(GameState_OnTrialBegins);
 
         Stage_Intro_00();
+    }
 
-        ////StartNextBattle();
-        ////uiController.Announce("Game begins!");
+    private void Update()
+    {
+        TrialCountdownTick();
+    }
+
+
+    void GameState_OnTrialBegins()
+    {
+        Singleton.Instance.GameInstance.GameState.SetPhase(EGamePhase.Trial);
+        //load map
+        StartNextBattle();
+        //start game, spawn units
+    }
+
+
+    void TrialCountdownTick()
+    {
+        if (Singleton.Instance.GameInstance.GameState.TrialCountdownEnabled)
+        {
+            if (Singleton.Instance.GameInstance.GameState.TrialCountdown > 0)
+            {
+                Singleton.Instance.GameInstance.GameState.UpdateTrialCountdown(
+                    Mathf.Clamp(Singleton.Instance.GameInstance.GameState.TrialCountdown - Time.deltaTime, 0, float.MaxValue));
+            }
+        }
     }
 
     private void UiController_OnSellSelected()
@@ -57,7 +81,7 @@ public class GameMode : MonoBehaviour
 
     private void UiController_OnPawnSlotUnselected(UnitInstance unit, int targetSlotIndex)
     {
-       
+
     }
     private void UIController_OnUnitSelectedInIntro01(UnitInstance unit, int targetSlotIndex)
     {
@@ -148,7 +172,7 @@ public class GameMode : MonoBehaviour
 
     private void UiController_OnRecruitmentConfirmedInIntro(IUnitBlueprint unitBlueprint, int slotIndex)
     {
-        uiController.OnRecruitmentConfirmed.AddListener(UiController_OnRecruitmentConfirmedInIntro);
+        uiController.OnRecruitmentConfirmed.RemoveListener(UiController_OnRecruitmentConfirmedInIntro);
         Stage_Intro_01();
     }
 
@@ -168,9 +192,35 @@ public class GameMode : MonoBehaviour
 
     void Stage_Intro_02()
     {
+        uiController.OnPawnSlotSelected.RemoveListener(UIController_OnUnitSelectedInIntro01);
         tutorialController.ShowStage(2);
         uiController.ShowPlacementUI();
+        Singleton.Instance.GameInstance.GameState.OnLineupChanged.AddListener(GameState_OnLineupChangedStage02);
     }
+
+    void GameState_OnLineupChangedStage02()
+    {
+        if (Singleton.Instance.GameInstance.GameState.IsLineupFull())
+        {
+            Singleton.Instance.GameInstance.GameState.OnLineupChanged.RemoveListener(GameState_OnLineupChangedStage02);
+            Stage_Intro_03();
+        }
+    }
+
+    void Stage_Intro_03()
+    {
+        //Prepare for trial
+        tutorialController.ShowStage(3);
+
+        Singleton.Instance.GameInstance.GameState.StartTrialCountdown(5);
+        Singleton.Instance.GameInstance.GameState.OnTrialBegins.AddListener(GameState_OnTrialBeginsStage03);
+    }
+    void GameState_OnTrialBeginsStage03()
+    {
+        Singleton.Instance.GameInstance.GameState.OnTrialBegins.RemoveListener(GameState_OnTrialBeginsStage03);
+        tutorialController.HideAll();
+    }
+
 
     void RollRecruits()
     {

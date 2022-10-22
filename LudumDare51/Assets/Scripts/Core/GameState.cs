@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor.AnimatedValues;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -19,7 +20,11 @@ public class GameState
     public EGamePhase CurrentPhase = EGamePhase.None;
     public List<UnitInstance> Lineup = new List<UnitInstance>();
 
+    public bool TrialCountdownEnabled = false;
+    public float TrialCountdown = 0;
 
+    public UnityEvent OnTrialBegins = new UnityEvent();
+    public UnityEvent<float> OnTrialCountdownChanged = new UnityEvent<float>();
     public UnityEvent OnLineupChanged = new UnityEvent();
     public UnityEvent<int> OnTotalCoinsChanged = new UnityEvent<int>();
     public UnityEvent<int> OnRecruitChanged = new UnityEvent<int>();
@@ -28,6 +33,31 @@ public class GameState
     public UnityEvent<EGamePhase> OnPhaseChanged = new UnityEvent<EGamePhase>();
     public UnityEvent<UnitInstance> OnSelectedUnitChanged = new UnityEvent<UnitInstance>();
 
+
+    public void StartTrialCountdown(float SecondsToStart)
+    {
+        TrialCountdown = SecondsToStart;
+        TrialCountdownEnabled = true;
+        OnTrialCountdownChanged.Invoke(SecondsToStart);
+    }
+
+    public void UpdateTrialCountdown(float UpdateValue)
+    {
+        bool trialBegins = false;
+        TrialCountdown = UpdateValue;
+        if (TrialCountdown <= 0)
+        {
+            TrialCountdownEnabled = false;
+            trialBegins = true;
+        }
+        
+        OnTrialCountdownChanged.Invoke(UpdateValue);
+        
+        if (trialBegins)
+        {
+            OnTrialBegins.Invoke();
+        }
+    }
     public void ChangeSlot(UnitInstance unit, int destinationSlotIndex)
     {
         if (destinationSlotIndex > Slots.Length || destinationSlotIndex < 0)
@@ -153,6 +183,10 @@ public class GameState
     public void SetPhase(EGamePhase newPhase)
     {
         CurrentPhase = newPhase;
+        if (SelectedUnit && SelectedUnit.IsInLineup)
+        {
+            SelectUnit(null);
+        }
         if (OnPhaseChanged != null) OnPhaseChanged.Invoke(CurrentPhase);
     }
 
