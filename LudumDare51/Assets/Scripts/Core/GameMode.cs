@@ -129,6 +129,8 @@ public class GameMode : MonoBehaviour
     void StartNextBattle()
     {
         LoadRandomMap();
+        ClampPlayerLineup();
+        SpawnPlayerLineup();
     }
 
     void LoadRandomMap()
@@ -152,6 +154,19 @@ public class GameMode : MonoBehaviour
             map.gameObject.SetActive(false);
             Destroy(map.gameObject);
         }
+    }
+    void ClampPlayerLineup()
+    {
+        while (Singleton.Instance.GameInstance.GameState.Lineup.Count > Singleton.Instance.GameInstance.GameState.LineUpLimit)
+        {
+            Singleton.Instance.GameInstance.GameState.TryReturnFromLineUp();
+        }
+    }
+
+    void SpawnPlayerLineup()
+    {
+
+
     }
 
     void Stage_Intro_00()

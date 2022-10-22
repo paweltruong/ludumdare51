@@ -11,6 +11,7 @@ public class UIController : MonoBehaviour
     [SerializeField] NumberPresenter coins;
     [SerializeField] NumberPresenter incomeTimer;
     [SerializeField] NumberPresenter trialCountdown;
+    [SerializeField] NumberPresenter trialBeginCountdown;
     [SerializeField] PawnSlotPresenter[] pawnSlots;
 
     [Header("Units")]
@@ -45,6 +46,7 @@ public class UIController : MonoBehaviour
         Assert.IsNotNull(coins);
         Assert.IsNotNull(incomeTimer);
         Assert.IsNotNull(trialCountdown);
+        Assert.IsNotNull(trialBeginCountdown);
         Assert.IsNotNull(txtLineUpValue);
         Assert.IsTrue(pawnSlots.Length == 8);
         Assert.IsTrue(recruitmentSlots.Length == 3);
@@ -74,7 +76,7 @@ public class UIController : MonoBehaviour
         Singleton.Instance.GameInstance.GameState.OnLineupLimitChanged.AddListener(GameState_OnLineupLimitChanged);
         Singleton.Instance.GameInstance.GameState.OnSelectedUnitChanged.AddListener(GameState_OnSelectedUnitChanged);
         Singleton.Instance.GameInstance.GameState.OnLineupChanged.AddListener(GameState_OnLineupChanged);
-        Singleton.Instance.GameInstance.GameState.OnTrialCountdownChanged.AddListener(GameState_OnTrialCountdownChanged);
+        Singleton.Instance.GameInstance.GameState.OnTrialBeginCountdownChanged.AddListener(GameState_OnTrialBeginCountdownChanged);
         Singleton.Instance.GameInstance.GameState.OnPhaseChanged.AddListener(GameState_OnPhaseChanged);
     }
 
@@ -112,14 +114,18 @@ public class UIController : MonoBehaviour
     }
     void UpdateTrialCountdown()
     {
-        trialCountdown.SetValue(Mathf.FloorToInt(Singleton.Instance.GameInstance.GameState.TrialCountdown));
+        //TODO:
+    }
+    void UpdateTrialBeginCountdown()
+    {
+        trialBeginCountdown.SetValue(Mathf.FloorToInt(Singleton.Instance.GameInstance.GameState.TrialCountdown));
         if (Singleton.Instance.GameInstance.GameState.TrialCountdownEnabled)
         {
-            trialCountdown.ShowImmediate();
+            trialBeginCountdown.ShowImmediate();
         }
         else
         {
-            trialCountdown.HideImmediate();
+            trialBeginCountdown.HideImmediate();
         }
     }
 
@@ -133,9 +139,9 @@ public class UIController : MonoBehaviour
     {
         UpdateLineupCount();
     }
-    void GameState_OnTrialCountdownChanged(float value)
+    void GameState_OnTrialBeginCountdownChanged(float value)
     {
-        UpdateTrialCountdown();
+        UpdateTrialBeginCountdown();
     }
     void GameState_OnPhaseChanged(EGamePhase newPhase)
     {

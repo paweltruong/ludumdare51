@@ -305,6 +305,10 @@ PrefabInstance:
       value: 0.17
       objectReference: {fileID: 0}
     - target: {fileID: 8666398721880417373, guid: 89457351a26e7bf4b9fae42f067a3105, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8666398721880417373, guid: 89457351a26e7bf4b9fae42f067a3105, type: 3}
       propertyPath: m_AgentTypeID
       value: -1372625422
       objectReference: {fileID: 0}

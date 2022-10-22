@@ -24,7 +24,7 @@ public class GameState
     public float TrialCountdown = 0;
 
     public UnityEvent OnTrialBegins = new UnityEvent();
-    public UnityEvent<float> OnTrialCountdownChanged = new UnityEvent<float>();
+    public UnityEvent<float> OnTrialBeginCountdownChanged = new UnityEvent<float>();
     public UnityEvent OnLineupChanged = new UnityEvent();
     public UnityEvent<int> OnTotalCoinsChanged = new UnityEvent<int>();
     public UnityEvent<int> OnRecruitChanged = new UnityEvent<int>();
@@ -33,12 +33,57 @@ public class GameState
     public UnityEvent<EGamePhase> OnPhaseChanged = new UnityEvent<EGamePhase>();
     public UnityEvent<UnitInstance> OnSelectedUnitChanged = new UnityEvent<UnitInstance>();
 
+    /// <summary>
+    /// Try to return first overflow unit to pawn slots from lineup. If there is no space unit will be sold
+    /// </summary>
+    /// <returns></returns>
+    public bool TryReturnFromLineUp()
+    {
+        if (Singleton.Instance.GameInstance.GameState.Lineup.Count > Singleton.Instance.GameInstance.GameState.LineUpLimit)
+        {
+            int lineupOverflowIndex = Singleton.Instance.GameInstance.GameState.LineUpLimit;
+            var unit = Singleton.Instance.GameInstance.GameState.Lineup[lineupOverflowIndex];
+            if (GetAvailableFreeSlotsCount() > 0)
+            {
+                int freeSlotIndex = GetFirstFreeSlotIndex();
+                if (freeSlotIndex < 0)
+                {
+                    Debug.LogError("Could not return from lineup");
+                    return false;
+                }
 
+                //Put to slot
+                ReturnFromLineupToSlot(unit, freeSlotIndex);
+                return true;
+            }
+            else
+            {
+                //sell
+                SellUnit(unit);
+                return false;
+            }
+        }
+        return false;
+    }
+
+    int GetFirstFreeSlotIndex()
+    {
+        int freeSlotIndex = -1;
+        for (int i = 0; i < Slots.Length; ++i)
+        {
+            if (!Slots[i])
+            {
+                freeSlotIndex = i;
+                break;
+            }
+        }
+        return freeSlotIndex;
+    }
     public void StartTrialCountdown(float SecondsToStart)
     {
         TrialCountdown = SecondsToStart;
         TrialCountdownEnabled = true;
-        OnTrialCountdownChanged.Invoke(SecondsToStart);
+        OnTrialBeginCountdownChanged.Invoke(SecondsToStart);
     }
 
     public void UpdateTrialCountdown(float UpdateValue)
@@ -50,9 +95,9 @@ public class GameState
             TrialCountdownEnabled = false;
             trialBegins = true;
         }
-        
-        OnTrialCountdownChanged.Invoke(UpdateValue);
-        
+
+        OnTrialBeginCountdownChanged.Invoke(UpdateValue);
+
         if (trialBegins)
         {
             OnTrialBegins.Invoke();
@@ -90,8 +135,17 @@ public class GameState
     }
     public void SellSelectedUnit()
     {
-        AddCoins(SelectedUnit.GetCost());
-        RemoveUnit(SelectedUnit);
+        SellUnit(SelectedUnit);
+    }
+    void SellUnit(UnitInstance unit)
+    {
+        if (!unit)
+        {
+            Debug.LogError("Unit to sell is null");
+            return;
+        }
+        AddCoins(unit.GetCost());
+        RemoveUnit(unit);
     }
     public bool IsLineupFull()
     {
@@ -101,18 +155,33 @@ public class GameState
     {
         Singleton.Instance.GameInstance.GameState.SelectUnit(null);
 
-        //remove ftom slots
-        for (int i = 0; i < Slots.Length; i++)
+        if (unit.IsInLineup)
         {
-            if (Slots[i] == unit)
+            //remove from tiles
+            for (int i = 0; i < PlayerTiles.Length; i++)
             {
-                unit.CleanupForPooling();
-                Slots[i] = null;
-                if (OnSlotChanged != null) OnSlotChanged.Invoke(i);
+                if (PlayerTiles[i] == unit)
+                {
+                    unit.CleanupForPooling();
+                    PlayerTiles[i] = null;
+                    Lineup.Remove(unit);
+                    if (OnLineupChanged != null) OnLineupChanged.Invoke();
+                }
             }
         }
-
-        //todo:remove from tiles
+        else
+        {
+            //remove from slots
+            for (int i = 0; i < Slots.Length; i++)
+            {
+                if (Slots[i] == unit)
+                {
+                    unit.CleanupForPooling();
+                    Slots[i] = null;
+                    if (OnSlotChanged != null) OnSlotChanged.Invoke(i);
+                }
+            }
+        }
 
         PlayerUnits.Remove(unit);
     }
